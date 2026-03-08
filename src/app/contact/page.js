@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import PageHero from '@/components/PageHero/PageHero';
 import styles from './contact.module.css';
-import { Phone, Mail, MapPin, Send, Instagram, Facebook, Twitter } from 'lucide-react';
+import { Phone, Mail, MapPin, Send, Instagram, Facebook, Youtube } from 'lucide-react';
 import { sendToWhatsApp } from '@/lib/whatsapp';
 
 const ContactPage = () => {
@@ -48,21 +48,21 @@ const ContactPage = () => {
                                     <div className={styles.iconCircle}><Phone size={24} /></div>
                                     <div>
                                         <h4>Phone</h4>
-                                        <p>+91 98765 43210</p>
+                                        <p>+91 77992 02129</p>
                                     </div>
                                 </div>
                                 <div className={styles.detailItem}>
                                     <div className={styles.iconCircle}><Mail size={24} /></div>
                                     <div>
                                         <h4>Email</h4>
-                                        <p>contact@movielifez.com</p>
+                                        <p>Movielifez4u@gmail.com</p>
                                     </div>
                                 </div>
                                 <div className={styles.detailItem}>
                                     <div className={styles.iconCircle}><MapPin size={24} /></div>
                                     <div>
                                         <h4>Office</h4>
-                                        <p>123 Film City Road, Jubilee Hills, Hyderabad, India</p>
+                                        <p>CCHF+9V7, Krishna Nagar, Jubli Hills, Hyderabad, Telangana 500034</p>
                                     </div>
                                 </div>
                             </div>
@@ -70,9 +70,9 @@ const ContactPage = () => {
                             <div className={styles.socialBox}>
                                 <h4>Follow Us</h4>
                                 <div className={styles.socials}>
-                                    <a href="#"><Instagram /></a>
-                                    <a href="#"><Facebook /></a>
-                                    <a href="#"><Twitter /></a>
+                                    <a href="https://www.instagram.com/invites/contact/?utm_source=ig_contact_invite&utm_medium=copy_link&utm_content=m5jec1k" target="_blank" rel="noopener noreferrer"><Instagram /></a>
+                                    <a href="https://www.facebook.com/share/1XALDgCPid/" target="_blank" rel="noopener noreferrer"><Facebook /></a>
+                                    <a href="https://youtube.com/@movielifez-o7e?si=2NOTNPk8r_5DTOnY" target="_blank" rel="noopener noreferrer"><Youtube /></a>
                                 </div>
                             </div>
                         </div>
@@ -106,7 +106,7 @@ const ContactPage = () => {
 
             <div className={styles.mapSection}>
                 <iframe
-                    src="https://maps.google.com/maps?q=Film+City+Road,+Jubilee+Hills,+Hyderabad,+Telangana,+India&output=embed"
+                    src="https://maps.google.com/maps?q=CCHF+9V7,+Krishna+Nagar,+Jubli+Hills,+Hyderabad,+Telangana+500034&output=embed"
                     width="100%"
                     height="450"
                     style={{ border: 0 }}

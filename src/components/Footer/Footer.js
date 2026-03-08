@@ -48,15 +48,15 @@ const Footer = () => {
                         <h3>Get in Touch</h3>
                         <div className={styles.contactItem}>
                             <Phone size={18} className={styles.contactIcon} />
-                            <span>+91 98765 43210</span>
+                            <span>+91 77992 02129</span>
                         </div>
                         <div className={styles.contactItem}>
                             <Mail size={18} className={styles.contactIcon} />
-                            <span>contact@movielifez.com</span>
+                            <span>Movielifez4u@gmail.com</span>
                         </div>
                         <div className={styles.contactItem}>
                             <MapPin size={18} className={styles.contactIcon} />
-                            <span>Film City, Hyderabad, India</span>
+                            <span>CCHF+9V7, Krishna Nagar, Jubli Hills, Hyderabad, Telangana 500034</span>
                         </div>
                     </div>
                 </div>
