@@ -2,7 +2,8 @@
 
 :root {
   /* Core Palette */
-  --primary: #00BFFF; /* Sky Blue */
+  --primary: #00BFFF;
+  /* Sky Blue */
   --primary-rgb: 0, 191, 255;
   --secondary: #FFFFFF;
   --secondary-rgb: 255, 255, 255;
@@ -10,16 +11,16 @@
   --text-light: #555555;
   --background: #FFFFFF;
   --deep-bg: #0A0A0A;
-  
+
   /* Cinematic Accents */
   --accent: #E0F2FE;
   --glass: rgba(255, 255, 255, 0.7);
   --glass-border: rgba(255, 255, 255, 0.2);
   --shadow: 0 8px 32px 0 rgba(0, 191, 255, 0.1);
-  
+
   /* Typography */
   --font-main: 'Space Grotesk', sans-serif;
-  
+
   /* Sizes */
   --nav-height: 80px;
   --container-max: 1400px;
@@ -41,8 +42,9 @@
 
 html,
 body {
-  max-width: 100vw;
-  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden !important;
   font-family: var(--font-main);
   background-color: var(--background);
   color: var(--text);
@@ -50,7 +52,12 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.02em;
@@ -74,7 +81,13 @@ ul {
 }
 
 section {
-  padding: 100px 20px;
+  padding: 60px 20px;
+}
+
+@media (max-width: 768px) {
+  section {
+    padding: 40px 15px;
+  }
 }
 
 .container {
