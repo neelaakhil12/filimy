@@ -2,9 +2,14 @@
 
 import { useState, useEffect, useRef } from 'react';
 import styles from './admin.module.css';
-import { LayoutDashboard, Users, FileText, Settings, LogOut, Search, MoreVertical, Image as ImageIcon, Youtube, IndianRupee, Save, Plus, X, Upload, Loader2 } from 'lucide-react';
+import { LayoutDashboard, Users, FileText, Settings, LogOut, Search, MoreVertical, Image as ImageIcon, Youtube, IndianRupee, Save, Plus, X, Upload, Loader2, Scan } from 'lucide-react';
 
 const AdminDashboard = () => {
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [loginError, setLoginError] = useState('');
+
     const [activeTab, setActiveTab] = useState('SiteContent');
     const [config, setConfig] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -12,8 +17,15 @@ const AdminDashboard = () => {
     const fileInputRef = useRef(null);
 
     useEffect(() => {
-        fetchConfig();
-    }, []);
+        // Check local storage for session
+        const session = localStorage.getItem('adminSession');
+        if (session === 'true') {
+            setIsAuthenticated(true);
+        }
+        if (isAuthenticated) {
+            fetchConfig();
+        }
+    }, [isAuthenticated]);
 
     const fetchConfig = async () => {
         try {
@@ -88,6 +100,36 @@ const AdminDashboard = () => {
         setConfig({ ...config, adImages: newAds });
     };
 
+    const handleQRUpload = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setUploading(true);
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Upload failed');
+
+            setConfig({
+                ...config,
+                enrollmentPrices: { ...config.enrollmentPrices, paymentQR: data.url }
+            });
+            alert('QR uploaded successfully! Click "Save All Changes" to make it live.');
+        } catch (error) {
+            console.error('Upload error:', error);
+            alert('Failed to upload QR: ' + error.message);
+        } finally {
+            setUploading(false);
+        }
+    };
+
     const actorData = [
         { id: 1, name: "Arjun Reddy", email: "arjun@example.com", phone: "+91 98765 43210", status: "Active" },
         { id: 2, name: "Sneha Kapoor", email: "sneha@example.com", phone: "+91 88765 43211", status: "Pending" },
@@ -98,6 +140,67 @@ const AdminDashboard = () => {
         { id: 101, client: "Red Chillies", type: "Web Series", budget: "₹5 Lakhs", date: "2024-03-10" },
         { id: 102, client: "Dharma Prod", type: "Movie", budget: "₹15 Lakhs", date: "2024-03-12" },
     ];
+
+    const handleLogin = (e) => {
+        e.preventDefault();
+        const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'admin@movielifez.com';
+        const adminPass = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin@123';
+
+        if (email === adminEmail && password === adminPass) {
+            setIsAuthenticated(true);
+            localStorage.setItem('adminSession', 'true');
+            setLoginError('');
+        } else {
+            setLoginError('Invalid email or password');
+        }
+    };
+
+    const handleLogout = () => {
+        setIsAuthenticated(false);
+        localStorage.removeItem('adminSession');
+        setEmail('');
+        setPassword('');
+    };
+
+    if (!isAuthenticated) {
+        return (
+            <div className={styles.loginContainer}>
+                <div className={styles.loginCard}>
+                    <div className={styles.logo} style={{ textAlign: 'center', marginBottom: '20px' }}>
+                        <span style={{ fontSize: '24px', fontWeight: 'bold' }}>Movie<span style={{ color: '#FFD700' }}>lifez</span> Admin</span>
+                    </div>
+                    <form onSubmit={handleLogin} className={styles.loginForm}>
+                        <div className={styles.formGroup}>
+                            <label>Email Address</label>
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                                placeholder="Enter admin email"
+                                className={styles.loginInput}
+                            />
+                        </div>
+                        <div className={styles.formGroup}>
+                            <label>Password</label>
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                                placeholder="Enter admin password"
+                                className={styles.loginInput}
+                            />
+                        </div>
+                        {loginError && <p className={styles.errorMessage} style={{ color: '#ff4444', marginBottom: '10px' }}>{loginError}</p>}
+                        <button type="submit" className={styles.saveBtn} style={{ width: '100%', marginTop: '10px' }}>
+                            Login to Dashboard
+                        </button>
+                    </form>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className={styles.adminLayout}>
@@ -114,7 +217,7 @@ const AdminDashboard = () => {
                         <Settings size={20} /> Site Content
                     </button>
                 </nav>
-                <button className={styles.logout}><LogOut size={20} /> Logout</button>
+                <button className={styles.logout} onClick={handleLogout}><LogOut size={20} /> Logout</button>
             </aside>
 
             {/* Main Content */}
@@ -189,76 +292,136 @@ const AdminDashboard = () => {
                                 <>
                                     <div className={styles.formGroup}>
                                         <label><Youtube size={18} /> Home Featured YouTube Videos</label>
-                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                                            {config.youtubeLinks?.map((link, idx) => (
-                                                <div key={idx}>
-                                                    <small>Video {idx + 1}</small>
-                                                    <input
-                                                        type="text"
-                                                        value={link}
-                                                        onChange={(e) => {
-                                                            const newLinks = [...config.youtubeLinks];
-                                                            newLinks[idx] = e.target.value;
-                                                            setConfig({ ...config, youtubeLinks: newLinks });
-                                                        }}
-                                                        placeholder={`Enter YouTube Link ${idx + 1}`}
-                                                    />
+                                        <div className={styles.videoList}>
+                                            {(config.youtubeLinks || []).map((link, idx) => (
+                                                <div key={idx} className={styles.videoItem}>
+                                                    <div className={styles.videoInputWrapper}>
+                                                        <input
+                                                            type="text"
+                                                            value={link}
+                                                            onChange={(e) => {
+                                                                const newLinks = [...config.youtubeLinks];
+                                                                newLinks[idx] = e.target.value;
+                                                                setConfig({ ...config, youtubeLinks: newLinks });
+                                                            }}
+                                                            placeholder={`Enter YouTube Link ${idx + 1}`}
+                                                        />
+                                                        <button
+                                                            onClick={() => {
+                                                                const newLinks = [...config.youtubeLinks];
+                                                                newLinks.splice(idx, 1);
+                                                                setConfig({ ...config, youtubeLinks: newLinks });
+                                                            }}
+                                                            className={styles.removeVideo}
+                                                        >
+                                                            <X size={14} />
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             ))}
+                                            <button
+                                                className={styles.addVideoBtn}
+                                                onClick={() => {
+                                                    const newLinks = [...(config.youtubeLinks || []), ""];
+                                                    setConfig({ ...config, youtubeLinks: newLinks });
+                                                }}
+                                            >
+                                                <Plus size={18} /> Add Video Link
+                                            </button>
                                         </div>
                                     </div>
 
                                     <div className={styles.formGroup}>
-                                        <label><IndianRupee size={18} /> Enrollment Prices</label>
-                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '20px' }}>
-                                            {config.enrollmentPrices && (
-                                                <>
-                                                    <div>
-                                                        <small>Main Character (₹)</small>
-                                                        <input
-                                                            type="number"
-                                                            value={config.enrollmentPrices.main || 0}
-                                                            onChange={(e) => setConfig({
-                                                                ...config,
-                                                                enrollmentPrices: { ...config.enrollmentPrices, main: parseInt(e.target.value) || 0 }
-                                                            })}
-                                                        />
+                                        <label><IndianRupee size={18} /> Enrollment Plans & Details</label>
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', marginTop: '10px' }}>
+                                            {config.enrollmentPrices && ['main', 'side', 'couple', 'kid'].map((key) => {
+                                                const plan = config.enrollmentPrices[key];
+                                                if (!plan) return null;
+                                                const label = key.charAt(0).toUpperCase() + key.slice(1) + ' Character';
+                                                return (
+                                                    <div key={key} style={{ border: '1px solid #2a2a2a', padding: '15px', borderRadius: '8px', backgroundColor: '#1a1a1a' }}>
+                                                        <h4 style={{ marginBottom: '15px', color: '#fff', fontSize: '16px' }}>{label}</h4>
+                                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                                            <div>
+                                                                <small style={{ color: '#888', display: 'block', marginBottom: '5px' }}>Price (₹)</small>
+                                                                <input
+                                                                    type="number"
+                                                                    value={plan.price || 0}
+                                                                    onChange={(e) => setConfig({
+                                                                        ...config,
+                                                                        enrollmentPrices: { ...config.enrollmentPrices, [key]: { ...plan, price: parseInt(e.target.value) || 0 } }
+                                                                    })}
+                                                                    style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #333', background: '#0a0a0a', color: '#fff' }}
+                                                                />
+                                                            </div>
+                                                            <div>
+                                                                <small style={{ color: '#888', display: 'block', marginBottom: '5px' }}>Contract</small>
+                                                                <input
+                                                                    type="text"
+                                                                    value={plan.contract || ''}
+                                                                    onChange={(e) => setConfig({
+                                                                        ...config,
+                                                                        enrollmentPrices: { ...config.enrollmentPrices, [key]: { ...plan, contract: e.target.value } }
+                                                                    })}
+                                                                    style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #333', background: '#0a0a0a', color: '#fff' }}
+                                                                />
+                                                            </div>
+                                                            <div>
+                                                                <small style={{ color: '#888', display: 'block', marginBottom: '5px' }}>Prize Money</small>
+                                                                <input
+                                                                    type="text"
+                                                                    value={plan.prize || ''}
+                                                                    onChange={(e) => setConfig({
+                                                                        ...config,
+                                                                        enrollmentPrices: { ...config.enrollmentPrices, [key]: { ...plan, prize: e.target.value } }
+                                                                    })}
+                                                                    style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #333', background: '#0a0a0a', color: '#fff' }}
+                                                                />
+                                                            </div>
+                                                            <div>
+                                                                <small style={{ color: '#888', display: 'block', marginBottom: '5px' }}>Ads</small>
+                                                                <input
+                                                                    type="text"
+                                                                    value={plan.ads || ''}
+                                                                    onChange={(e) => setConfig({
+                                                                        ...config,
+                                                                        enrollmentPrices: { ...config.enrollmentPrices, [key]: { ...plan, ads: e.target.value } }
+                                                                    })}
+                                                                    style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #333', background: '#0a0a0a', color: '#fff' }}
+                                                                />
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <small>Side Character (₹)</small>
-                                                        <input
-                                                            type="number"
-                                                            value={config.enrollmentPrices.side || 0}
-                                                            onChange={(e) => setConfig({
-                                                                ...config,
-                                                                enrollmentPrices: { ...config.enrollmentPrices, side: parseInt(e.target.value) || 0 }
-                                                            })}
-                                                        />
-                                                    </div>
-                                                    <div>
-                                                        <small>Couple Character (₹)</small>
-                                                        <input
-                                                            type="number"
-                                                            value={config.enrollmentPrices.couple || 0}
-                                                            onChange={(e) => setConfig({
-                                                                ...config,
-                                                                enrollmentPrices: { ...config.enrollmentPrices, couple: parseInt(e.target.value) || 0 }
-                                                            })}
-                                                        />
-                                                    </div>
-                                                    <div>
-                                                        <small>Kid Character (₹)</small>
-                                                        <input
-                                                            type="number"
-                                                            value={config.enrollmentPrices.kid || 0}
-                                                            onChange={(e) => setConfig({
-                                                                ...config,
-                                                                enrollmentPrices: { ...config.enrollmentPrices, kid: parseInt(e.target.value) || 0 }
-                                                            })}
-                                                        />
-                                                    </div>
-                                                </>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+
+                                    <div className={styles.formGroup}>
+                                        <label><Scan size={18} /> Payment QR Code</label>
+                                        <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center', gap: '20px' }}>
+                                            {config.enrollmentPrices?.paymentQR && (
+                                                <div style={{ width: '150px', height: '150px', border: '1px solid #333', borderRadius: '8px', overflow: 'hidden' }}>
+                                                    <img src={config.enrollmentPrices.paymentQR} alt="Payment QR" style={{ width: '100%', height: '100%', objectFit: 'contain', background: '#fff' }} />
+                                                </div>
                                             )}
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                                <button
+                                                    onClick={() => document.getElementById('qrUploadInput').click()}
+                                                    className={styles.addVideoBtn}
+                                                    style={{ width: 'fit-content' }}
+                                                >
+                                                    <Upload size={18} /> {uploading ? 'Uploading...' : 'Upload New QR'}
+                                                </button>
+                                                <input
+                                                    id="qrUploadInput"
+                                                    type="file"
+                                                    style={{ display: 'none' }}
+                                                    accept="image/*"
+                                                    onChange={handleQRUpload}
+                                                />
+                                                <small style={{ color: '#888' }}>Upload a new QR code to replace the old one for user payments.</small>
+                                            </div>
                                         </div>
                                     </div>
 

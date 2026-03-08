@@ -342,3 +342,102 @@
     border-radius: 25px;
     border: 1px dashed #E2E8F0;
 }
+
+.videoList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.videoItem {
+    width: 100%;
+}
+
+.videoInputWrapper {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.videoInputWrapper input {
+    flex-grow: 1;
+}
+
+.removeVideo {
+    background: #EF4444;
+    color: white;
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.removeVideo:hover {
+    background: #DC2626;
+}
+
+.addVideoBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: #F1F5F9;
+    color: var(--text);
+    border-radius: 50px;
+    font-weight: 600;
+    width: fit-content;
+    margin-top: 10px;
+    transition: all 0.2s ease;
+    border: 1px solid #E2E8F0;
+}
+
+.addVideoBtn:hover {
+    background: var(--accent);
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+/* Login Styles */
+.loginContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #F8FAFC;
+    padding: 20px;
+}
+
+.loginCard {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 400px;
+}
+
+.loginForm {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.loginInput {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 1px solid #E2E8F0;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.loginInput:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.1);
+    outline: none;
+}

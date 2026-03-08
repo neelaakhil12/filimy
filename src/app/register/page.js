@@ -34,44 +34,48 @@ const RegistrationPage = () => {
         email: '',
     });
 
+    const getPlanValue = (planId, key, fallback) => {
+        return config?.enrollmentPrices?.[planId]?.[key] || fallback;
+    };
+
     const characterPlans = [
         {
             id: 'main',
             title: 'Main Character',
-            price: `₹${config?.enrollmentPrices?.main || 1999}`,
-            contract: '1 Year Contract',
-            prize: '10 Lakhs Prize Money',
-            ads: '10+ Ads',
+            price: `₹${getPlanValue('main', 'price', 1999)}`,
+            contract: getPlanValue('main', 'contract', '1 Year Contract'),
+            prize: getPlanValue('main', 'prize', '10 Lakhs Prize Money'),
+            ads: getPlanValue('main', 'ads', '10+ Ads'),
             icon: <Star />,
             color: '#FFD700'
         },
         {
             id: 'side',
             title: 'Side Character',
-            price: `₹${config?.enrollmentPrices?.side || 1499}`,
-            contract: '1 Year Contract',
-            prize: '5 Lakhs Prize Money',
-            ads: '10+ Ads',
+            price: `₹${getPlanValue('side', 'price', 1499)}`,
+            contract: getPlanValue('side', 'contract', '1 Year Contract'),
+            prize: getPlanValue('side', 'prize', '5 Lakhs Prize Money'),
+            ads: getPlanValue('side', 'ads', '10+ Ads'),
             icon: <User />,
             color: '#FF8C00'
         },
         {
             id: 'couple',
             title: 'Couple Character',
-            price: `₹${config?.enrollmentPrices?.couple || 2999}`,
-            contract: '1 Year Contract',
-            prize: '10 Lakhs Prize Money',
-            ads: '10+ Ads',
+            price: `₹${getPlanValue('couple', 'price', 2999)}`,
+            contract: getPlanValue('couple', 'contract', '1 Year Contract'),
+            prize: getPlanValue('couple', 'prize', '10 Lakhs Prize Money'),
+            ads: getPlanValue('couple', 'ads', '10+ Ads'),
             icon: <Users />,
             color: '#FF69B4'
         },
         {
             id: 'kid',
             title: 'Kid Character',
-            price: `₹${config?.enrollmentPrices?.kid || 999}`,
-            contract: '1 Year Contract',
-            prize: '3 Lakhs Prize Money',
-            ads: '10+ Ads',
+            price: `₹${getPlanValue('kid', 'price', 999)}`,
+            contract: getPlanValue('kid', 'contract', '1 Year Contract'),
+            prize: getPlanValue('kid', 'prize', '3 Lakhs Prize Money'),
+            ads: getPlanValue('kid', 'ads', '10+ Ads'),
             icon: <Baby />,
             color: '#87CEEB'
         }
@@ -277,7 +281,7 @@ const RegistrationPage = () => {
                                             <h3>Complete Your Payment</h3>
                                             <div className={styles.paymentGrid}>
                                                 <div className={styles.qrContainer}>
-                                                    <img src="/images/payment-qr.png" alt="Payment QR Code" className={styles.qrCode} />
+                                                    <img src={config?.enrollmentPrices?.paymentQR || "/images/payment-qr.png"} alt="Payment QR Code" className={styles.qrCode} />
                                                     <p>Scan the QR code to pay <strong>{selectedPlan.price}</strong></p>
                                                 </div>
                                                 <div className={styles.paymentInfo}>

@@ -211,27 +211,42 @@ export default function Home() {
             <h2>Our Featured Content</h2>
           </div>
           <div className={styles.videoGrid}>
-            {config?.youtubeLinks?.map((link, idx) => (
-              <div key={idx} className={styles.videoWrapper}>
-                <iframe
-                  src={link.replace('watch?v=', 'embed/').split('&')[0]}
-                  title={`Featured Video ${idx + 1}`}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen>
-                </iframe>
-              </div>
-            )) || [1, 2, 3, 4].map((n) => (
-              <div key={n} className={styles.videoWrapper}>
-                <iframe
-                  src={`https://www.youtube.com/embed/placeholder${n}`}
-                  title={`Featured Video ${n}`}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen>
-                </iframe>
-              </div>
-            ))}
+            {(config?.youtubeLinks || []).map((link, idx) => {
+              // Robust YouTube ID extraction
+              const getEmbedUrl = (url) => {
+                if (!url) return "";
+                let videoId = "";
+                try {
+                  if (url.includes('youtu.be/')) {
+                    videoId = url.split('youtu.be/')[1].split(/[?#]/)[0];
+                  } else if (url.includes('watch?v=')) {
+                    videoId = url.split('watch?v=')[1].split('&')[0];
+                  } else if (url.includes('embed/')) {
+                    videoId = url.split('embed/')[1].split(/[?#]/)[0];
+                  } else {
+                    videoId = url.split('/').pop().split(/[?#]/)[0];
+                  }
+                  return `https://www.youtube.com/embed/${videoId}`;
+                } catch (e) {
+                  return "";
+                }
+              };
+
+              const embedUrl = getEmbedUrl(link);
+              if (!embedUrl) return null;
+
+              return (
+                <div key={idx} className={styles.videoWrapper}>
+                  <iframe
+                    src={embedUrl}
+                    title={`Featured Video ${idx + 1}`}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen>
+                  </iframe>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
