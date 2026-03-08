@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PageHero from '@/components/PageHero/PageHero';
 import styles from './register.module.css';
 import { User, Briefcase, Camera, Video, Phone, CheckCircle, ChevronRight, ChevronLeft, CreditCard, Users, Baby, Star, Scan, Check } from 'lucide-react';

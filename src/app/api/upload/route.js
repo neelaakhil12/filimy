@@ -1,7 +1,23 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { getSupabase } from '@/lib/supabase';
 
 export async function POST(req) {
+    const supabase = getSupabase();
+    // Diagnostic Logging (visible in your terminal)
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    console.log('--- Upload Diagnostic ---');
+    console.log('URL:', url);
+    console.log('Key Length:', key?.length);
+    if (key) {
+        const parts = key.split('.');
+        console.log('JWT Sections:', parts.length);
+        if (parts.length === 3) {
+            console.log('Signature Length:', parts[2].length);
+        }
+    }
+    console.log('-------------------------');
+
     try {
         const formData = await req.formData();
         const file = formData.get('file');
@@ -14,7 +30,6 @@ export async function POST(req) {
         const fileName = `${Date.now()}.${fileExt}`;
         const filePath = `ads/${fileName}`;
 
-        // Convert the file to an ArrayBuffer for Supabase
         const buffer = await file.arrayBuffer();
 
         const { data, error: uploadError } = await supabase.storage
@@ -25,8 +40,8 @@ export async function POST(req) {
             });
 
         if (uploadError) {
-            console.error('Supabase Server Upload Error:', uploadError);
-            return NextResponse.json({ error: uploadError.message }, { status: 500 });
+            console.error('SERVER UPLOAD ERROR:', uploadError.message);
+            return NextResponse.json({ error: uploadError.message || 'Signature verification failed' }, { status: 500 });
         }
 
         const { data: { publicUrl } } = supabase.storage
@@ -35,7 +50,7 @@ export async function POST(req) {
 
         return NextResponse.json({ url: publicUrl });
     } catch (error) {
-        console.error('Internal Server Error:', error);
+        console.error('CRITICAL SERVER ERROR:', error);
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

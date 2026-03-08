@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from 'react';
 import styles from './admin.module.css';
 import { LayoutDashboard, Users, FileText, Settings, LogOut, Search, MoreVertical, Image as ImageIcon, Youtube, IndianRupee, Save, Plus, X, Upload, Loader2 } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
 
 const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState('SiteContent');
@@ -29,14 +28,19 @@ const AdminDashboard = () => {
     const handleSaveConfig = async () => {
         setLoading(true);
         try {
-            await fetch('/api/config', {
+            const res = await fetch('/api/config', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(config),
             });
+
+            const result = await res.json();
+            if (!res.ok) throw new Error(result.error || 'Failed to save');
+
             alert('Settings saved successfully!');
         } catch (error) {
-            alert('Failed to save settings');
+            console.error('Save error:', error);
+            alert('Failed to save settings: ' + error.message);
         } finally {
             setLoading(false);
         }
