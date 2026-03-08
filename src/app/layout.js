@@ -6,7 +6,7 @@ import PageTransition from "@/components/Transitions/PageTransition";
 import WhatsAppButton from "@/components/WhatsAppButton/WhatsAppButton";
 
 export const metadata = {
-  metadataBase: new URL('https://movielifez.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://movielifez.com'),
   title: {
     default: "Movielifez | Find the Perfect Actors for Your Next Project",
     template: "%s | Movielifez"
@@ -24,7 +24,7 @@ export const metadata = {
   openGraph: {
     title: "Movielifez | Connecting Talent with Opportunity",
     description: "The premier platform for actors to showcase talent and filmmakers to find their perfect cast.",
-    url: 'https://movielifez.com',
+    url: process.env.NEXT_PUBLIC_BASE_URL || 'https://movielifez.com',
     siteName: 'Movielifez',
     images: [
       {
@@ -55,7 +55,7 @@ export const metadata = {
     },
   },
   verification: {
-    google: "google-site-verification-placeholder",
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "google-site-verification-placeholder",
   },
 };
 
@@ -63,8 +63,8 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "Movielifez",
-  "url": "https://movielifez.com",
-  "logo": "https://movielifez.com/images/logo.png",
+  "url": process.env.NEXT_PUBLIC_BASE_URL || "https://movielifez.com",
+  "logo": (process.env.NEXT_PUBLIC_BASE_URL || "https://movielifez.com") + "/images/logo.png",
   "description": "Connecting talented actors with world-class filmmakers and production houses.",
   "contactPoint": {
     "@type": "ContactPoint",

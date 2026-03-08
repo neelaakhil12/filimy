@@ -48,15 +48,15 @@ const Footer = () => {
                         <h3>Get in Touch</h3>
                         <div className={styles.contactItem}>
                             <Phone size={18} className={styles.contactIcon} />
-                            <span>+91 77992 02129</span>
+                            <span>+91 {process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ? process.env.NEXT_PUBLIC_WHATSAPP_NUMBER.slice(-10) : '77992 02129'}</span>
                         </div>
                         <div className={styles.contactItem}>
                             <Mail size={18} className={styles.contactIcon} />
-                            <span>Movielifez4u@gmail.com</span>
+                            <span>{process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'Movielifez4u@gmail.com'}</span>
                         </div>
                         <div className={styles.contactItem}>
                             <MapPin size={18} className={styles.contactIcon} />
-                            <span>CCHF+9V7, Krishna Nagar, Jubli Hills, Hyderabad, Telangana 500034</span>
+                            <span>{process.env.NEXT_PUBLIC_CONTACT_ADDRESS || 'CCHF+9V7, Krishna Nagar, Jubli Hills, Hyderabad, Telangana 500034'}</span>
                         </div>
                     </div>
                 </div>

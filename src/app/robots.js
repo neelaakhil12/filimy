@@ -5,6 +5,6 @@ export default function robots() {
             allow: '/',
             disallow: '/private/',
         },
-        sitemap: 'https://movielifez.com/sitemap.xml',
+        sitemap: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://movielifez.com'}/sitemap.xml`,
     };
 }

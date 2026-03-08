@@ -48,21 +48,21 @@ const ContactPage = () => {
                                     <div className={styles.iconCircle}><Phone size={24} /></div>
                                     <div>
                                         <h4>Phone</h4>
-                                        <p>+91 77992 02129</p>
+                                        <p>+91 {process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ? process.env.NEXT_PUBLIC_WHATSAPP_NUMBER.slice(-10) : '77992 02129'}</p>
                                     </div>
                                 </div>
                                 <div className={styles.detailItem}>
                                     <div className={styles.iconCircle}><Mail size={24} /></div>
                                     <div>
                                         <h4>Email</h4>
-                                        <p>Movielifez4u@gmail.com</p>
+                                        <p>{process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'Movielifez4u@gmail.com'}</p>
                                     </div>
                                 </div>
                                 <div className={styles.detailItem}>
                                     <div className={styles.iconCircle}><MapPin size={24} /></div>
                                     <div>
                                         <h4>Office</h4>
-                                        <p>CCHF+9V7, Krishna Nagar, Jubli Hills, Hyderabad, Telangana 500034</p>
+                                        <p>{process.env.NEXT_PUBLIC_CONTACT_ADDRESS || 'CCHF+9V7, Krishna Nagar, Jubli Hills, Hyderabad, Telangana 500034'}</p>
                                     </div>
                                 </div>
                             </div>
@@ -106,7 +106,7 @@ const ContactPage = () => {
 
             <div className={styles.mapSection}>
                 <iframe
-                    src="https://maps.google.com/maps?q=CCHF+9V7,+Krishna+Nagar,+Jubli+Hills,+Hyderabad,+Telangana+500034&output=embed"
+                    src={`https://maps.google.com/maps?q=${encodeURIComponent(process.env.NEXT_PUBLIC_CONTACT_ADDRESS || 'CCHF+9V7, Krishna Nagar, Jubli Hills, Hyderabad, Telangana 500034')}&output=embed`}
                     width="100%"
                     height="450"
                     style={{ border: 0 }}

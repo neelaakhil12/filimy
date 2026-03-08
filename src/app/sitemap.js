@@ -1,5 +1,5 @@
 export default function sitemap() {
-    const baseUrl = 'https://movielifez.com';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://movielifez.com';
 
     const routes = [
         '',
