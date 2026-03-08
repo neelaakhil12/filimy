@@ -62,7 +62,9 @@ const Footer = () => {
                 </div>
 
                 <div className={styles.bottomBar}>
-                    <p>&copy; {new Date().getFullYear()} Movielifez. All rights reserved.</p>
+                    <p>
+                        &copy; {new Date().getFullYear()} Movielifez. All rights reserved. | Developed by <a href="https://www.codtechitsolutions.com/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary, #00B4D8)', textDecoration: 'none', fontWeight: 'bold' }}>CODTECH IT SOLUTION</a>
+                    </p>
                     <div className={styles.bottomLinks}>
                         <Link href="/terms">Terms of Service</Link>
                         <Link href="/cookies">Cookie Policy</Link>
