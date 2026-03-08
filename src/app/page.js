@@ -30,6 +30,17 @@ export default function Home() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       // Hero Animations
+      gsap.fromTo(".slide-in",
+        { x: -50, opacity: 0 },
+        {
+          x: 0,
+          opacity: 1,
+          duration: 1.2,
+          ease: "power3.out",
+          delay: 0.2
+        }
+      );
+
       gsap.fromTo(".fade-in",
         { y: 50, opacity: 0 },
         {
@@ -71,7 +82,7 @@ export default function Home() {
       <section className={styles.hero}>
         <div className={styles.heroOverlay}></div>
         <div className={styles.heroContent}>
-          <h1 className="fade-in">We are looking for talented <span>actors</span> for our next project</h1>
+          <h1 className="slide-in">We are looking for talented <span>actors</span> for our next project</h1>
           <p className="fade-in">
             Connecting talented actors with world-class filmmakers, production houses, and casting directors.
             From movies to web series, discover the faces that bring stories to life.
