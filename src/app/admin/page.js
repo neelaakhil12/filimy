@@ -50,9 +50,6 @@ const AdminDashboard = () => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        const label = prompt("Enter Image Label (e.g. Ad 5):");
-        if (!label) return;
-
         setUploading(true);
         try {
             const formData = new FormData();
@@ -69,7 +66,7 @@ const AdminDashboard = () => {
 
             setConfig({
                 ...config,
-                adImages: [...(config.adImages || []), { src: data.url, label }]
+                adImages: [...(config.adImages || []), { src: data.url, label: "Advertisement" }]
             });
 
             alert('Image uploaded successfully! Click "Save All Changes" to make it live.');
@@ -266,8 +263,7 @@ const AdminDashboard = () => {
                                         <div className={styles.adList}>
                                             {config.adImages?.map((ad, index) => (
                                                 <div key={index} className={styles.adItem}>
-                                                    <img src={ad.src} alt={ad.label} />
-                                                    <span>{ad.label}</span>
+                                                    <img src={ad.src} alt="Advertisement" />
                                                     <button onClick={() => handleRemoveAd(index)} className={styles.removeAd}><X size={14} /></button>
                                                 </div>
                                             ))}
