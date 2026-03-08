@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Film, Instagram, Facebook, Twitter, Mail, Phone, MapPin } from 'lucide-react';
+import { Film, Instagram, Facebook, Youtube, Mail, Phone, MapPin } from 'lucide-react';
 import styles from './Footer.module.css';
 
 const Footer = () => {
@@ -17,9 +17,9 @@ const Footer = () => {
                             Connecting the brightest talents with the world's leading filmmakers and production houses. Your journey to stardom begins here.
                         </p>
                         <div className={styles.socials}>
-                            <a href="#" className={styles.socialLink}><Instagram size={20} /></a>
-                            <a href="#" className={styles.socialLink}><Facebook size={20} /></a>
-                            <a href="#" className={styles.socialLink}><Twitter size={20} /></a>
+                            <a href="https://www.facebook.com/share/1XALDgCPid/" target="_blank" rel="noopener noreferrer" className={styles.socialLink}><Facebook size={20} /></a>
+                            <a href="https://www.instagram.com/invites/contact/?utm_source=ig_contact_invite&utm_medium=copy_link&utm_content=m5jec1k" target="_blank" rel="noopener noreferrer" className={styles.socialLink}><Instagram size={20} /></a>
+                            <a href="https://youtube.com/@movielifez-o7e?si=2NOTNPk8r_5DTOnY" target="_blank" rel="noopener noreferrer" className={styles.socialLink}><Youtube size={20} /></a>
                         </div>
                     </div>
 
