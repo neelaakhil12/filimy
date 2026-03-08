@@ -502,12 +502,23 @@
 }
 
 @media (max-width: 768px) {
+  .hero {
+    height: auto;
+    min-height: 80vh;
+    padding-top: 100px;
+    padding-bottom: 60px;
+  }
+
   .heroContent h1 {
     font-size: 3rem;
   }
 
   .heroContent {
     margin-left: 5%;
+  }
+
+  .heroButtons {
+    flex-direction: column;
   }
 
   .ctaFlex {
