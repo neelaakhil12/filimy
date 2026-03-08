@@ -1,9 +1,7 @@
 import "./globals.css";
-import Navbar from "@/components/Navbar/Navbar";
-import Footer from "@/components/Footer/Footer";
+import NavigationHandler from "@/components/Navigation/NavigationHandler";
 import SmoothScroll from "@/components/Transitions/SmoothScroll";
 import PageTransition from "@/components/Transitions/PageTransition";
-import WhatsAppButton from "@/components/WhatsAppButton/WhatsAppButton";
 
 export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://movielifez.com'),
@@ -89,14 +87,14 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <SmoothScroll>
-          <Navbar />
-          <PageTransition>
-            <main>{children}</main>
-          </PageTransition>
-          <Footer />
-          <WhatsAppButton />
+          <NavigationHandler>
+            <PageTransition>
+              <main>{children}</main>
+            </PageTransition>
+          </NavigationHandler>
         </SmoothScroll>
       </body>
     </html>
   );
 }
+

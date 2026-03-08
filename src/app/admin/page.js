@@ -1,11 +1,93 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styles from './admin.module.css';
-import { LayoutDashboard, Users, FileText, Settings, LogOut, Search, MoreVertical } from 'lucide-react';
+import { LayoutDashboard, Users, FileText, Settings, LogOut, Search, MoreVertical, Image as ImageIcon, Youtube, IndianRupee, Save, Plus, X, Upload, Loader2 } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 
 const AdminDashboard = () => {
-    const [activeTab, setActiveTab] = useState('Actors');
+    const [activeTab, setActiveTab] = useState('Dashboard');
+    const [config, setConfig] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [uploading, setUploading] = useState(false);
+    const fileInputRef = useRef(null);
+
+    useEffect(() => {
+        fetchConfig();
+    }, []);
+
+    const fetchConfig = async () => {
+        try {
+            const res = await fetch('/api/config');
+            const data = await res.json();
+            setConfig(data);
+        } catch (error) {
+            console.error('Failed to fetch config', error);
+        }
+    };
+
+    const handleSaveConfig = async () => {
+        setLoading(true);
+        try {
+            await fetch('/api/config', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(config),
+            });
+            alert('Settings saved successfully!');
+        } catch (error) {
+            alert('Failed to save settings');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleAddAd = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleFileUpload = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const label = prompt("Enter Image Label (e.g. Ad 5):");
+        if (!label) return;
+
+        setUploading(true);
+        try {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Math.random()}.${fileExt}`;
+            const filePath = `ads/${fileName}`;
+
+            const { error: uploadError } = await supabase.storage
+                .from('ads')
+                .upload(filePath, file);
+
+            if (uploadError) throw uploadError;
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('ads')
+                .getPublicUrl(filePath);
+
+            setConfig({
+                ...config,
+                adImages: [...(config.adImages || []), { src: publicUrl, label }]
+            });
+
+            alert('Image uploaded successfully! Click "Save All Changes" to make it live.');
+        } catch (error) {
+            console.error('Upload error:', error);
+            alert('Failed to upload image: ' + error.message);
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const handleRemoveAd = (index) => {
+        const newAds = [...config.adImages];
+        newAds.splice(index, 1);
+        setConfig({ ...config, adImages: newAds });
+    };
 
     const actorData = [
         { id: 1, name: "Arjun Reddy", email: "arjun@example.com", phone: "+91 98765 43210", status: "Active" },
@@ -35,7 +117,9 @@ const AdminDashboard = () => {
                     <button className={activeTab === 'Requests' ? styles.active : ''} onClick={() => setActiveTab('Requests')}>
                         <FileText size={20} /> Casting Requests
                     </button>
-                    <button><Settings size={20} /> Settings</button>
+                    <button className={activeTab === 'SiteContent' ? styles.active : ''} onClick={() => setActiveTab('SiteContent')}>
+                        <Settings size={20} /> Site Content
+                    </button>
                 </nav>
                 <button className={styles.logout}><LogOut size={20} /> Logout</button>
             </aside>
@@ -43,7 +127,7 @@ const AdminDashboard = () => {
             {/* Main Content */}
             <main className={styles.main}>
                 <header className={styles.header}>
-                    <h2>{activeTab} Management</h2>
+                    <h2>{activeTab === 'SiteContent' ? 'Site Content' : activeTab} Management</h2>
                     <div className={styles.headerActions}>
                         <div className={styles.adminSearch}>
                             <Search size={18} />
@@ -104,6 +188,130 @@ const AdminDashboard = () => {
                                 </tbody>
                             </table>
                         </div>
+                    ) : activeTab === 'SiteContent' ? (
+                        <div className={styles.managementSection}>
+                            <h3>Global Settings</h3>
+
+                            {config && !config.error ? (
+                                <>
+                                    <div className={styles.formGroup}>
+                                        <label><Youtube size={18} /> Home Featured YouTube Videos</label>
+                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                                            {config.youtubeLinks?.map((link, idx) => (
+                                                <div key={idx}>
+                                                    <small>Video {idx + 1}</small>
+                                                    <input
+                                                        type="text"
+                                                        value={link}
+                                                        onChange={(e) => {
+                                                            const newLinks = [...config.youtubeLinks];
+                                                            newLinks[idx] = e.target.value;
+                                                            setConfig({ ...config, youtubeLinks: newLinks });
+                                                        }}
+                                                        placeholder={`Enter YouTube Link ${idx + 1}`}
+                                                    />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div className={styles.formGroup}>
+                                        <label><IndianRupee size={18} /> Enrollment Prices</label>
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '20px' }}>
+                                            {config.enrollmentPrices && (
+                                                <>
+                                                    <div>
+                                                        <small>Main Character (₹)</small>
+                                                        <input
+                                                            type="number"
+                                                            value={config.enrollmentPrices.main || 0}
+                                                            onChange={(e) => setConfig({
+                                                                ...config,
+                                                                enrollmentPrices: { ...config.enrollmentPrices, main: parseInt(e.target.value) || 0 }
+                                                            })}
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <small>Side Character (₹)</small>
+                                                        <input
+                                                            type="number"
+                                                            value={config.enrollmentPrices.side || 0}
+                                                            onChange={(e) => setConfig({
+                                                                ...config,
+                                                                enrollmentPrices: { ...config.enrollmentPrices, side: parseInt(e.target.value) || 0 }
+                                                            })}
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <small>Couple Character (₹)</small>
+                                                        <input
+                                                            type="number"
+                                                            value={config.enrollmentPrices.couple || 0}
+                                                            onChange={(e) => setConfig({
+                                                                ...config,
+                                                                enrollmentPrices: { ...config.enrollmentPrices, couple: parseInt(e.target.value) || 0 }
+                                                            })}
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <small>Kid Character (₹)</small>
+                                                        <input
+                                                            type="number"
+                                                            value={config.enrollmentPrices.kid || 0}
+                                                            onChange={(e) => setConfig({
+                                                                ...config,
+                                                                enrollmentPrices: { ...config.enrollmentPrices, kid: parseInt(e.target.value) || 0 }
+                                                            })}
+                                                        />
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <div className={styles.formGroup}>
+                                        <label><ImageIcon size={18} /> Advertisement Images</label>
+                                        <div className={styles.adList}>
+                                            {config.adImages?.map((ad, index) => (
+                                                <div key={index} className={styles.adItem}>
+                                                    <img src={ad.src} alt={ad.label} />
+                                                    <span>{ad.label}</span>
+                                                    <button onClick={() => handleRemoveAd(index)} className={styles.removeAd}><X size={14} /></button>
+                                                </div>
+                                            ))}
+                                            {config.adImages && (
+                                                <div className={styles.addAdBox} onClick={handleAddAd}>
+                                                    {uploading ? <Loader2 className={styles.spinner} size={30} /> : <Plus size={30} />}
+                                                    <span>{uploading ? 'Uploading...' : 'Add New Ad'}</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <input
+                                            type="file"
+                                            ref={fileInputRef}
+                                            style={{ display: 'none' }}
+                                            accept="image/*"
+                                            onChange={handleFileUpload}
+                                        />
+                                    </div>
+
+                                    <button
+                                        className={styles.saveBtn}
+                                        onClick={handleSaveConfig}
+                                        disabled={loading}
+                                    >
+                                        <Save size={20} /> {loading ? 'Saving...' : 'Save All Changes'}
+                                    </button>
+                                </>
+                            ) : config?.error ? (
+                                <div className={styles.errorBox}>
+                                    <p>{config.error}</p>
+                                    <button onClick={fetchConfig} className={styles.retryBtn}>Retry Connection</button>
+                                </div>
+                            ) : (
+                                <div className={styles.loadingBox}>Loading configuration from Supabase...</div>
+                            )}
+                        </div>
                     ) : (
                         <div className={styles.statsGrid}>
                             <div className={styles.statCard}>
@@ -127,3 +335,4 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
+

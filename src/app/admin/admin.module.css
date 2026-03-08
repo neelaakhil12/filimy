@@ -175,3 +175,168 @@
     font-weight: 800;
     color: var(--primary);
 }
+
+/* Site Content Management Styles */
+.managementSection {
+    background: white;
+    padding: 40px;
+    border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.managementSection h3 {
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #F1F5F9;
+    color: var(--text);
+}
+
+.formGroup {
+    margin-bottom: 30px;
+}
+
+.formGroup label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text-light);
+}
+
+.formGroup input {
+    width: 100%;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #E2E8F0;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.formGroup input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(0, 180, 216, 0.1);
+}
+
+.adList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.adItem {
+    position: relative;
+    border: 1px solid #E2E8F0;
+    border-radius: 15px;
+    padding: 10px;
+    background: #F8FAFC;
+}
+
+.adItem img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.adItem span {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-light);
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.removeAd {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #EF4444;
+    color: white;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+}
+
+.addAdBox {
+    border: 2px dashed #CBD5E1;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-light);
+}
+
+.addAdBox:hover {
+    border-color: var(--primary);
+    background: var(--accent);
+    color: var(--primary);
+}
+
+.saveBtn {
+    background: var(--primary);
+    color: white;
+    padding: 15px 40px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 10px 20px rgba(0, 180, 216, 0.2);
+}
+
+.saveBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(0, 180, 216, 0.3);
+}
+
+.errorBox {
+    background: #FEF2F2;
+    border: 1px solid #FEE2E2;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    color: #991B1B;
+}
+
+.retryBtn {
+    margin-top: 15px;
+    background: #EF4444;
+    color: white;
+    padding: 10px 25px;
+    border-radius: 50px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.retryBtn:hover {
+    background: #DC2626;
+    transform: scale(1.05);
+}
+
+.loadingBox {
+    padding: 50px;
+    text-align: center;
+    color: var(--text-light);
+    font-style: italic;
+    background: white;
+    border-radius: 25px;
+    border: 1px dashed #E2E8F0;
+}

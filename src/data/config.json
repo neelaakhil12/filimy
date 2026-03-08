@@ -1,0 +1,31 @@
+{
+    "adImages": [
+        {
+            "src": "/images/ad1.png",
+            "label": "Advertisement 1"
+        },
+        {
+            "src": "/images/ad2.png",
+            "label": "Advertisement 2"
+        },
+        {
+            "src": "/images/ad3.png",
+            "label": "Advertisement 2"
+        },
+        {
+            "src": "/images/ad4.png",
+            "label": "Advertisement 4"
+        }
+    ],
+    "youtubeLinks": [
+        "https://www.youtube.com/watch?v=LXb3EKWsInQ",
+        "https://www.youtube.com/watch?v=tgbNymZ7vqY",
+        "https://www.youtube.com/watch?v=jNQXAC9IVRw",
+        "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    ],
+    "enrollmentPrices": {
+        "basic": 499,
+        "pro": 999,
+        "elite": 1999
+    }
+}

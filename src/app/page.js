@@ -9,20 +9,28 @@ import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const adImages = [
-  { src: '/images/ad1.png', label: 'Advertisement 1' },
-  { src: '/images/ad2.png', label: 'Advertisement 2' },
-  { src: '/images/ad3.png', label: 'Advertisement 3' },
-  { src: '/images/ad4.png', label: 'Advertisement 4' },
-];
-
 export default function Home() {
   const containerRef = useRef(null);
   const [adIndex, setAdIndex] = useState(0);
+  const [config, setConfig] = useState(null);
+
+  useEffect(() => {
+    fetch('/api/config')
+      .then(res => res.json())
+      .then(data => setConfig(data))
+      .catch(err => console.error("Failed to load home config", err));
+  }, []);
+
+  const currentAds = config?.adImages || [
+    { src: '/images/ad1.png', label: 'Advertisement 1' },
+    { src: '/images/ad2.png', label: 'Advertisement 2' },
+    { src: '/images/ad3.png', label: 'Advertisement 3' },
+    { src: '/images/ad4.png', label: 'Advertisement 4' },
+  ];
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setAdIndex(prev => (prev + 1) % adImages.length);
+      setAdIndex(prev => (prev + 1) % currentAds.length);
     }, 5000);
     return () => clearInterval(timer);
   }, []);
@@ -140,7 +148,7 @@ export default function Home() {
           </div>
 
           <div className={styles.adSlideTrack}>
-            {adImages.map((ad, i) => (
+            {currentAds.map((ad, i) => (
               <div
                 key={i}
                 className={`${styles.adSlide} ${i === adIndex ? styles.adSlideActive : ''}`}
@@ -154,7 +162,7 @@ export default function Home() {
 
           {/* Dot indicators */}
           <div className={styles.adDots}>
-            {adImages.map((_, i) => (
+            {currentAds.map((_, i) => (
               <button
                 key={i}
                 className={`${styles.adDot} ${i === adIndex ? styles.adDotActive : ''}`}
@@ -203,42 +211,27 @@ export default function Home() {
             <h2>Our Featured Content</h2>
           </div>
           <div className={styles.videoGrid}>
-            <div className={styles.videoWrapper}>
-              <iframe
-                src="https://www.youtube.com/embed/LXb3EKWsInQ"
-                title="Featured Video 1"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen>
-              </iframe>
-            </div>
-            <div className={styles.videoWrapper}>
-              <iframe
-                src="https://www.youtube.com/embed/tgbNymZ7vqY"
-                title="Featured Video 2"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen>
-              </iframe>
-            </div>
-            <div className={styles.videoWrapper}>
-              <iframe
-                src="https://www.youtube.com/embed/jNQXAC9IVRw"
-                title="Featured Video 3"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen>
-              </iframe>
-            </div>
-            <div className={styles.videoWrapper}>
-              <iframe
-                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-                title="Featured Video 4"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen>
-              </iframe>
-            </div>
+            {config?.youtubeLinks?.map((link, idx) => (
+              <div key={idx} className={styles.videoWrapper}>
+                <iframe
+                  src={link.replace('watch?v=', 'embed/').split('&')[0]}
+                  title={`Featured Video ${idx + 1}`}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen>
+                </iframe>
+              </div>
+            )) || [1, 2, 3, 4].map((n) => (
+              <div key={n} className={styles.videoWrapper}>
+                <iframe
+                  src={`https://www.youtube.com/embed/placeholder${n}`}
+                  title={`Featured Video ${n}`}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen>
+                </iframe>
+              </div>
+            ))}
           </div>
         </div>
       </section>

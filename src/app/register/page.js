@@ -9,6 +9,14 @@ import { sendToWhatsApp } from '@/lib/whatsapp';
 const RegistrationPage = () => {
     const [step, setStep] = useState(1);
     const [showPayment, setShowPayment] = useState(false);
+    const [config, setConfig] = useState(null);
+
+    useEffect(() => {
+        fetch('/api/config')
+            .then(res => res.json())
+            .then(data => setConfig(data))
+            .catch(err => console.error("Failed to load register config", err));
+    }, []);
     const [formData, setFormData] = useState({
         fullName: '',
         age: '',
@@ -30,7 +38,7 @@ const RegistrationPage = () => {
         {
             id: 'main',
             title: 'Main Character',
-            price: '₹1999',
+            price: `₹${config?.enrollmentPrices?.main || 1999}`,
             contract: '1 Year Contract',
             prize: '10 Lakhs Prize Money',
             ads: '10+ Ads',
@@ -40,7 +48,7 @@ const RegistrationPage = () => {
         {
             id: 'side',
             title: 'Side Character',
-            price: '₹1499',
+            price: `₹${config?.enrollmentPrices?.side || 1499}`,
             contract: '1 Year Contract',
             prize: '5 Lakhs Prize Money',
             ads: '10+ Ads',
@@ -50,7 +58,7 @@ const RegistrationPage = () => {
         {
             id: 'couple',
             title: 'Couple Character',
-            price: '₹2999',
+            price: `₹${config?.enrollmentPrices?.couple || 2999}`,
             contract: '1 Year Contract',
             prize: '10 Lakhs Prize Money',
             ads: '10+ Ads',
@@ -60,7 +68,7 @@ const RegistrationPage = () => {
         {
             id: 'kid',
             title: 'Kid Character',
-            price: '₹999',
+            price: `₹${config?.enrollmentPrices?.kid || 999}`,
             contract: '1 Year Contract',
             prize: '3 Lakhs Prize Money',
             ads: '10+ Ads',
