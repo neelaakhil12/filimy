@@ -6,7 +6,7 @@ import { LayoutDashboard, Users, FileText, Settings, LogOut, Search, MoreVertica
 import { supabase } from '@/lib/supabase';
 
 const AdminDashboard = () => {
-    const [activeTab, setActiveTab] = useState('Dashboard');
+    const [activeTab, setActiveTab] = useState('SiteContent');
     const [config, setConfig] = useState(null);
     const [loading, setLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
@@ -55,23 +55,21 @@ const AdminDashboard = () => {
 
         setUploading(true);
         try {
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${Math.random()}.${fileExt}`;
-            const filePath = `ads/${fileName}`;
+            const formData = new FormData();
+            formData.append('file', file);
 
-            const { error: uploadError } = await supabase.storage
-                .from('ads')
-                .upload(filePath, file);
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            });
 
-            if (uploadError) throw uploadError;
+            const data = await res.json();
 
-            const { data: { publicUrl } } = supabase.storage
-                .from('ads')
-                .getPublicUrl(filePath);
+            if (!res.ok) throw new Error(data.error || 'Upload failed');
 
             setConfig({
                 ...config,
-                adImages: [...(config.adImages || []), { src: publicUrl, label }]
+                adImages: [...(config.adImages || []), { src: data.url, label }]
             });
 
             alert('Image uploaded successfully! Click "Save All Changes" to make it live.');
@@ -110,12 +108,6 @@ const AdminDashboard = () => {
                 <nav className={styles.nav}>
                     <button className={activeTab === 'Dashboard' ? styles.active : ''} onClick={() => setActiveTab('Dashboard')}>
                         <LayoutDashboard size={20} /> Dashboard
-                    </button>
-                    <button className={activeTab === 'Actors' ? styles.active : ''} onClick={() => setActiveTab('Actors')}>
-                        <Users size={20} /> Actors
-                    </button>
-                    <button className={activeTab === 'Requests' ? styles.active : ''} onClick={() => setActiveTab('Requests')}>
-                        <FileText size={20} /> Casting Requests
                     </button>
                     <button className={activeTab === 'SiteContent' ? styles.active : ''} onClick={() => setActiveTab('SiteContent')}>
                         <Settings size={20} /> Site Content

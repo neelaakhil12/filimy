@@ -1,6 +1,6 @@
 .adminLayout {
     display: flex;
-    height: 100vh;
+    min-height: 100vh;
     background: #F8FAFC;
 }
 
@@ -11,6 +11,9 @@
     display: flex;
     flex-direction: column;
     padding: 30px;
+    height: 100vh;
+    position: sticky;
+    top: 0;
 }
 
 .logo {
@@ -61,7 +64,6 @@
 
 .main {
     flex-grow: 1;
-    overflow-y: auto;
     padding: 40px;
 }
 
