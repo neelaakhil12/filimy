@@ -1,0 +1,135 @@
+.intro {
+    background: white;
+}
+
+.introGrid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 80px;
+    align-items: center;
+}
+
+.introText h2 {
+    font-size: 3.5rem;
+    margin-bottom: 30px;
+}
+
+.introText h2 span {
+    color: var(--primary);
+}
+
+.introText p {
+    font-size: 1.15rem;
+    color: var(--text-light);
+    line-height: 1.8;
+}
+
+.introStats {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.stat {
+    background: #F8FAFC;
+    padding: 40px;
+    border-radius: 20px;
+    border-left: 5px solid var(--primary);
+}
+
+.stat h3 {
+    font-size: 2.5rem;
+    color: var(--text);
+    margin-bottom: 5px;
+}
+
+.stat p {
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+/* Vision & Mission */
+.missionVision {
+    background: var(--deep-bg);
+    color: white;
+}
+
+.mvGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.mvCard {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 60px 40px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
+
+.mvIcon {
+    color: var(--primary);
+    width: 50px;
+    height: 50px;
+    margin-bottom: 30px;
+}
+
+.mvCard h3 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.mvCard p {
+    color: #94A3B8;
+    line-height: 1.6;
+    font-size: 1.1rem;
+}
+
+/* Values */
+.valueGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.valueCard {
+    background: #F8FAFC;
+    padding: 40px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.valueCard:hover {
+    background: white;
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+}
+
+.valueIcon {
+    color: var(--primary);
+    margin-bottom: 20px;
+}
+
+.valueCard h4 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+}
+
+.sectionHeader {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+@media (max-width: 968px) {
+
+    .introGrid,
+    .mvGrid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .introText h2 {
+        font-size: 2.5rem;
+    }
+}

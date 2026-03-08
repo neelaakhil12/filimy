@@ -1,0 +1,132 @@
+.contactSection {
+    background: white;
+    padding: 100px 20px;
+}
+
+.contactGrid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 80px;
+}
+
+.infoBox .sectionHeader {
+    text-align: left;
+    margin-bottom: 40px;
+}
+
+.detailsList {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-bottom: 50px;
+}
+
+.detailItem {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.iconCircle {
+    width: 60px;
+    height: 60px;
+    background: var(--accent);
+    color: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.detailItem h4 {
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+}
+
+.detailItem p {
+    color: var(--text-light);
+}
+
+.socialBox h4 {
+    margin-bottom: 20px;
+}
+
+.socials {
+    display: flex;
+    gap: 15px;
+}
+
+.socials a {
+    width: 45px;
+    height: 45px;
+    background: #F8FAFC;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text);
+    transition: all 0.3s ease;
+}
+
+.socials a:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-3px);
+}
+
+.formBox {
+    background: #F8FAFC;
+    padding: 50px;
+    border-radius: 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.inputGroup label {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.inputGroup input,
+.inputGroup textarea {
+    padding: 15px;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    font-size: 1rem;
+}
+
+.submitBtn {
+    background: var(--primary);
+    color: white;
+    padding: 18px;
+    border-radius: 50px;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.mapSection {
+    margin-top: 50px;
+    filter: grayscale(100%) invert(90%) contrast(90%);
+}
+
+@media (max-width: 968px) {
+    .contactGrid {
+        grid-template-columns: 1fr;
+        gap: 60px;
+    }
+}

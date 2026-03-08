@@ -1,0 +1,141 @@
+.servicesList {
+    background: #F8FAFC;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.serviceCard {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    border: 1px solid #E2E8F0;
+}
+
+.serviceCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 191, 255, 0.1);
+    border-color: var(--primary);
+}
+
+.iconWrapper {
+    width: 60px;
+    height: 60px;
+    background: var(--accent);
+    color: var(--primary);
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.iconWrapper svg {
+    width: 30px;
+    height: 30px;
+}
+
+.serviceCard h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.serviceCard p {
+    color: var(--text-light);
+    line-height: 1.6;
+}
+
+/* Process Section */
+.process {
+    background: white;
+}
+
+.sectionHeader {
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+.processSteps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    position: relative;
+}
+
+.step {
+    position: relative;
+    text-align: center;
+}
+
+.step span {
+    font-size: 5rem;
+    font-weight: 800;
+    color: #F1F5F9;
+    line-height: 1;
+    display: block;
+    margin-bottom: -30px;
+}
+
+.step h4 {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    color: var(--text);
+    position: relative;
+    z-index: 1;
+}
+
+.step p {
+    color: var(--text-light);
+    line-height: 1.6;
+}
+
+/* Client CTA */
+.clientCta {
+    padding-bottom: 100px;
+}
+
+.ctaBox {
+    background: var(--deep-bg);
+    color: white;
+    padding: 80px;
+    border-radius: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 40px;
+}
+
+.ctaContent h2 {
+    font-size: 2.8rem;
+    margin-bottom: 15px;
+}
+
+.ctaContent p {
+    font-size: 1.1rem;
+    opacity: 0.8;
+}
+
+.ctaBtn {
+    background: var(--primary);
+    color: white;
+    padding: 18px 40px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+}
+
+@media (max-width: 1024px) {
+    .ctaBox {
+        flex-direction: column;
+        text-align: center;
+        padding: 60px 40px;
+    }
+}

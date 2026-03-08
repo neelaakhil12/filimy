@@ -1,0 +1,145 @@
+.footer {
+    background: var(--deep-bg);
+    color: white;
+    padding: 80px 20px 30px;
+}
+
+.container {
+    max-width: var(--container-max);
+    margin: 0 auto;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1.5fr;
+    gap: 60px;
+    margin-bottom: 60px;
+}
+
+.brand .logo {
+    color: white;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.brand .logo span span {
+    color: var(--primary);
+}
+
+.brand .icon {
+    color: var(--primary);
+}
+
+.description {
+    color: #94A3B8;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    max-width: 320px;
+}
+
+.socials {
+    display: flex;
+    gap: 15px;
+}
+
+.socialLink {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.socialLink:hover {
+    background: var(--primary);
+    transform: translateY(-3px);
+}
+
+.linksBlock h3,
+.contact h3 {
+    font-size: 1.2rem;
+    margin-bottom: 25px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.linksBlock h3::after,
+.contact h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--primary);
+}
+
+.linksBlock ul li {
+    margin-bottom: 15px;
+}
+
+.linksBlock ul li a {
+    color: #94A3B8;
+    transition: color 0.3s ease;
+}
+
+.linksBlock ul li a:hover {
+    color: var(--primary);
+}
+
+.contactItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    color: #94A3B8;
+}
+
+.contactIcon {
+    color: var(--primary);
+}
+
+.bottomBar {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #64748B;
+    font-size: 0.9rem;
+}
+
+.bottomLinks {
+    display: flex;
+    gap: 30px;
+}
+
+.bottomLinks a:hover {
+    color: white;
+}
+
+@media (max-width: 1024px) {
+    .grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+    }
+}
+
+@media (max-width: 640px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bottomBar {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+}

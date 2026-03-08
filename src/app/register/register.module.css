@@ -1,0 +1,436 @@
+.formSection {
+    background: #F8FAFC;
+    padding: 80px 20px;
+}
+
+.formWrapper {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Stepper */
+.stepper {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 50px;
+    position: relative;
+}
+
+.stepper::before {
+    content: '';
+    position: absolute;
+    top: 25px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #E2E8F0;
+    z-index: 0;
+}
+
+.stepItem {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.stepIcon {
+    width: 50px;
+    height: 50px;
+    background: white;
+    border: 2px solid #E2E8F0;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #94A3B8;
+    transition: all 0.3s ease;
+}
+
+.stepItem.active .stepIcon {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+    box-shadow: 0 0 20px rgba(0, 191, 255, 0.4);
+}
+
+.stepItem span {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #94A3B8;
+}
+
+.stepItem.active span {
+    color: var(--text);
+}
+
+/* Form Container */
+.formContainer {
+    background: white;
+    padding: 50px;
+    border-radius: 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+}
+
+.stepContent h3 {
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    color: var(--text);
+}
+
+.fieldGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.fullWidth {
+    grid-column: span 2;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.inputGroup label {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-light);
+}
+
+.inputGroup input,
+.inputGroup select {
+    padding: 15px;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.inputGroup input:focus,
+.inputGroup select:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(0, 191, 255, 0.1);
+}
+
+.actionBtns {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+}
+
+.nextBtn,
+.submitBtn {
+    background: var(--primary);
+    color: white;
+    padding: 16px 40px;
+    border-radius: 50px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+}
+
+.backBtn {
+    color: var(--text-light);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* File Upload Styles */
+.fileUpload {
+    position: relative;
+    width: 100%;
+}
+
+.fileUpload input[type="file"] {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    z-index: -1;
+}
+
+.fileLabel {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #F1F5F9;
+    border: 2px dashed #CBD5E1;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    color: #475569;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.fileLabel:hover {
+    background: #E2E8F0;
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.fileLabel svg {
+    color: #94A3B8;
+    transition: all 0.3s ease;
+}
+
+.fileLabel:hover svg {
+    color: var(--primary);
+    transform: scale(1.1);
+}
+
+.submitBtn {
+    background: #25D366;
+    /* WhatsApp Green */
+    margin-left: 0;
+    width: 100%;
+    justify-content: center;
+}
+
+/* Review Styles */
+.reviewGrid {
+    background: #F8FAFC;
+    padding: 30px;
+    border-radius: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.reviewItem span {
+    color: var(--text-light);
+    font-weight: 600;
+    margin-right: 10px;
+}
+
+/* Success Step */
+.successStep {
+    text-align: center;
+    padding: 40px 0;
+}
+
+.successIcon {
+    color: #25D366;
+    margin-bottom: 25px;
+}
+
+.successStep h3 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+/* Character Plan Cards */
+.cardGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.planCard {
+    background: #F8FAFC;
+    border: 2px solid #E2E8F0;
+    border-radius: 20px;
+    padding: 25px 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.planCard:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary);
+    background: white;
+    box-shadow: 0 10px 20px rgba(0, 191, 255, 0.1);
+}
+
+.selectedPlan {
+    border-color: var(--primary);
+    background: white;
+    box-shadow: 0 0 0 2px var(--primary), 0 10px 30px rgba(0, 191, 255, 0.15);
+    position: relative;
+}
+
+.selectionIndicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--primary);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 191, 255, 0.3);
+    animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+    }
+
+    to {
+        transform: scale(1);
+    }
+}
+
+.planIcon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    margin-bottom: 5px;
+}
+
+.planCard h4 {
+    font-size: 1rem;
+    color: var(--text);
+    margin: 0;
+}
+
+.planPrice {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+.planFeatures {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--text-light);
+    line-height: 1.6;
+}
+
+.refundNote {
+    background: #FFF8E1;
+    border-left: 4px solid #F59E0B;
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 0.85rem;
+    color: #78350F;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    line-height: 1.6;
+}
+
+/* Payment Section */
+.paymentSection h3 {
+    margin-bottom: 20px;
+}
+
+.paymentGrid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 40px;
+    background: #F8FAFC;
+    padding: 30px;
+    border-radius: 24px;
+}
+
+.qrContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    text-align: center;
+}
+
+.qrCode {
+    width: 200px;
+    height: 200px;
+    background: white;
+    padding: 10px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+.paymentInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.planSummary {
+    padding: 15px;
+    background: white;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #E2E8F0;
+}
+
+.planSummary span {
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.planSummary strong {
+    color: var(--primary);
+    font-size: 1.1rem;
+}
+
+.paymentNote {
+    font-size: 0.8rem;
+    color: #ef4444;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .paymentGrid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .cardGrid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .cardGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+
+    .fieldGrid,
+    .reviewGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .formContainer {
+        padding: 30px 20px;
+    }
+
+    .stepper span {
+        display: none;
+    }
+}
