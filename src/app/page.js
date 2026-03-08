@@ -149,17 +149,7 @@ export default function Home() {
               </div>
             ))}
 
-            {/* Prev / Next arrows */}
-            <button
-              className={`${styles.adArrow} ${styles.adArrowLeft}`}
-              onClick={() => setAdIndex(prev => (prev - 1 + adImages.length) % adImages.length)}
-              aria-label="Previous"
-            >&#8249;</button>
-            <button
-              className={`${styles.adArrow} ${styles.adArrowRight}`}
-              onClick={() => setAdIndex(prev => (prev + 1) % adImages.length)}
-              aria-label="Next"
-            >&#8250;</button>
+            {/* Prev / Next arrows removed */}
           </div>
 
           {/* Dot indicators */}
