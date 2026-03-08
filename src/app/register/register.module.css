@@ -121,6 +121,8 @@
 .actionBtns {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    gap: 15px;
     margin-top: 40px;
 }
 
@@ -135,6 +137,10 @@
     align-items: center;
     gap: 10px;
     margin-left: auto;
+    text-align: center;
+    justify-content: center;
+    flex-shrink: 1;
+    /* allow shrinking if needed */
 }
 
 .backBtn {
@@ -143,6 +149,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    flex-shrink: 0;
 }
 
 /* File Upload Styles */
@@ -236,7 +243,7 @@
 /* Character Plan Cards */
 .cardGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, ), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
     gap: 20px;
     margin-bottom: 30px;
 }
@@ -420,6 +427,9 @@
 }
 
 @media (max-width: 640px) {
+    .formSection {
+        padding: 40px 10px;
+    }
 
     .fieldGrid,
     .reviewGrid {
@@ -427,10 +437,23 @@
     }
 
     .formContainer {
-        padding: 30px 20px;
+        padding: 30px 15px;
     }
 
     .stepper span {
         display: none;
+    }
+
+    .nextBtn,
+    .submitBtn {
+        padding: 14px 20px;
+        font-size: 0.95rem;
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .actionBtns {
+        flex-direction: column-reverse;
+        gap: 20px;
     }
 }
