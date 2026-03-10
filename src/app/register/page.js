@@ -10,6 +10,7 @@ const RegistrationPage = () => {
     const [step, setStep] = useState(1);
     const [showPayment, setShowPayment] = useState(false);
     const [config, setConfig] = useState(null);
+    const [uploadingFiles, setUploadingFiles] = useState({});
 
     useEffect(() => {
         fetch('/api/config')
@@ -86,10 +87,32 @@ const RegistrationPage = () => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleFileChange = (e) => {
+    const handleFileChange = async (e) => {
         const { name, files } = e.target;
         if (files && files[0]) {
-            setFormData(prev => ({ ...prev, [name]: files[0].name }));
+            const file = files[0];
+            setUploadingFiles(prev => ({ ...prev, [name]: true }));
+
+            try {
+                const uploadData = new FormData();
+                uploadData.append('file', file);
+
+                const res = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: uploadData
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) throw new Error(data.error || 'Upload failed');
+
+                setFormData(prev => ({ ...prev, [name]: data.url }));
+            } catch (error) {
+                console.error('Upload error:', error);
+                alert('Failed to upload file: ' + error.message);
+            } finally {
+                setUploadingFiles(prev => ({ ...prev, [name]: false }));
+            }
         }
     };
 
@@ -113,8 +136,22 @@ const RegistrationPage = () => {
         setStep(step - 1);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        try {
+            // Save to database first
+            const res = await fetch('/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            if (!res.ok) {
+                console.error("Failed to save registration to database");
+            }
+        } catch (error) {
+            console.error("Error saving registration:", error);
+        }
+
         sendToWhatsApp(formData, "Actor Registration");
         setStep(6); // Success step
     };
@@ -203,30 +240,30 @@ const RegistrationPage = () => {
                                         <div className={styles.inputGroup}>
                                             <label>Full Photo</label>
                                             <div className={styles.fileUpload}>
-                                                <input type="file" name="fullPhoto" onChange={handleFileChange} accept="image/*" id="fullPhoto" />
+                                                <input type="file" name="fullPhoto" onChange={handleFileChange} accept=".pdf,.doc,.docx,image/*" id="fullPhoto" />
                                                 <label htmlFor="fullPhoto" className={styles.fileLabel}>
                                                     <Camera size={20} />
-                                                    {formData.fullPhoto || "Upload Full Photo"}
+                                                    {uploadingFiles.fullPhoto ? "Uploading..." : formData.fullPhoto ? "Uploaded" : "Upload Full Photo"}
                                                 </label>
                                             </div>
                                         </div>
                                         <div className={styles.inputGroup}>
                                             <label>Half Photo</label>
                                             <div className={styles.fileUpload}>
-                                                <input type="file" name="halfPhoto" onChange={handleFileChange} accept="image/*" id="halfPhoto" />
+                                                <input type="file" name="halfPhoto" onChange={handleFileChange} accept=".pdf,.doc,.docx,image/*" id="halfPhoto" />
                                                 <label htmlFor="halfPhoto" className={styles.fileLabel}>
                                                     <Camera size={20} />
-                                                    {formData.halfPhoto || "Upload Half Photo"}
+                                                    {uploadingFiles.halfPhoto ? "Uploading..." : formData.halfPhoto ? "Uploaded" : "Upload Half Photo"}
                                                 </label>
                                             </div>
                                         </div>
                                         <div className={styles.inputGroup + " " + styles.fullWidth}>
                                             <label>Passport Size Photo</label>
                                             <div className={styles.fileUpload}>
-                                                <input type="file" name="passportPhoto" onChange={handleFileChange} accept="image/*" id="passportPhoto" />
+                                                <input type="file" name="passportPhoto" onChange={handleFileChange} accept=".pdf,.doc,.docx,image/*" id="passportPhoto" />
                                                 <label htmlFor="passportPhoto" className={styles.fileLabel}>
                                                     <Camera size={20} />
-                                                    {formData.passportPhoto || "Upload Passport Size Photo"}
+                                                    {uploadingFiles.passportPhoto ? "Uploading..." : formData.passportPhoto ? "Uploaded" : "Upload Passport Size Photo"}
                                                 </label>
                                             </div>
                                         </div>
@@ -292,10 +329,10 @@ const RegistrationPage = () => {
                                                     <div className={styles.inputGroup + " " + styles.fullWidth}>
                                                         <label>Upload Payment Screenshot</label>
                                                         <div className={styles.fileUpload}>
-                                                            <input type="file" name="paymentScreenshot" onChange={handleFileChange} accept="image/*" id="paymentScreenshot" required />
+                                                            <input type="file" name="paymentScreenshot" onChange={handleFileChange} accept=".pdf,.doc,.docx,image/*" id="paymentScreenshot" required />
                                                             <label htmlFor="paymentScreenshot" className={styles.fileLabel}>
                                                                 <Scan size={20} />
-                                                                {formData.paymentScreenshot || "Select Screenshot"}
+                                                                {uploadingFiles.paymentScreenshot ? "Uploading..." : formData.paymentScreenshot ? "Screenshot Uploaded" : "Select Screenshot"}
                                                             </label>
                                                         </div>
                                                     </div>

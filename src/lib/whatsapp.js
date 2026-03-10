@@ -1,5 +1,5 @@
 export const sendToWhatsApp = (formData, formType) => {
-    const WHATSAPP_NUMBER = "919999999999"; // Replace with actual platform number
+    const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "917799202129";
 
     let message = `*New ${formType} Submission from Movielifez*\n\n`;
 

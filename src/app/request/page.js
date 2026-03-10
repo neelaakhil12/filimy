@@ -26,8 +26,22 @@ const ClientRequestPage = () => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        try {
+            // Save to database first
+            const res = await fetch('/api/request', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            if (!res.ok) {
+                console.error("Failed to save request to database");
+            }
+        } catch (error) {
+            console.error("Error saving request:", error);
+        }
+
         sendToWhatsApp(formData, "Client Casting Request");
         setSubmitted(true);
     };

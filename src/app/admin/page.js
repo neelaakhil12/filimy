@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './admin.module.css';
 import { LayoutDashboard, Users, FileText, Settings, LogOut, Search, MoreVertical, Image as ImageIcon, Youtube, IndianRupee, Save, Plus, X, Upload, Loader2, Scan } from 'lucide-react';
 
@@ -10,10 +10,13 @@ const AdminDashboard = () => {
     const [password, setPassword] = useState('');
     const [loginError, setLoginError] = useState('');
 
-    const [activeTab, setActiveTab] = useState('SiteContent');
+    const [activeTab, setActiveTab] = useState('Dashboard');
     const [config, setConfig] = useState(null);
+    const [actorData, setActorData] = useState([]);
+    const [requestData, setRequestData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
+    const [expandedRow, setExpandedRow] = useState(null);
     const fileInputRef = useRef(null);
 
     useEffect(() => {
@@ -24,6 +27,8 @@ const AdminDashboard = () => {
         }
         if (isAuthenticated) {
             fetchConfig();
+            fetchActors();
+            fetchRequests();
         }
     }, [isAuthenticated]);
 
@@ -34,6 +39,106 @@ const AdminDashboard = () => {
             setConfig(data);
         } catch (error) {
             console.error('Failed to fetch config', error);
+        }
+    };
+
+    const fetchActors = async () => {
+        try {
+            const res = await fetch('/api/register');
+            const data = await res.json();
+            if (data && data.data) {
+                const mappedData = data.data.map(a => ({
+                    id: a.id,
+                    name: a.full_name,
+                    age: a.age,
+                    gender: a.gender,
+                    location: a.location,
+                    pincode: a.pincode,
+                    experience: a.experience,
+                    languages: a.languages,
+                    characterType: a.character_type,
+                    email: a.email,
+                    phone: a.phone,
+                    status: a.status,
+                    fullPhoto: a.full_photo,
+                    halfPhoto: a.half_photo,
+                    passportPhoto: a.passport_photo,
+                    payment: a.payment_screenshot,
+                    createdAt: a.created_at ? new Date(a.created_at).toISOString().split('T')[0] : 'N/A'
+                }));
+                setActorData(mappedData);
+            }
+        } catch (err) {
+            console.error("Failed to fetch actors", err);
+        }
+    };
+
+    const fetchRequests = async () => {
+        try {
+            const res = await fetch('/api/request');
+            const data = await res.json();
+            if (data && data.data) {
+                const mappedData = data.data.map(r => ({
+                    id: r.id,
+                    client: r.company_name,
+                    type: r.project_type,
+                    actorCount: r.actor_count,
+                    ageRange: r.age_range,
+                    gender: r.gender,
+                    location: r.location,
+                    budget: r.budget || 'N/A',
+                    description: r.description,
+                    phone: r.phone,
+                    email: r.email,
+                    date: r.created_at ? new Date(r.created_at).toISOString().split('T')[0] : 'N/A',
+                    status: r.status || 'Pending'
+                }));
+                setRequestData(mappedData);
+            }
+        } catch (err) {
+            console.error("Failed to fetch requests", err);
+        }
+    };
+
+    const handleStatusChange = async (e, type, id) => {
+        const newStatus = e.target.value;
+        const endpoint = type === 'actor' ? '/api/register' : '/api/request';
+
+        try {
+            const res = await fetch(endpoint, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, status: newStatus })
+            });
+
+            if (res.ok) {
+                if (type === 'actor') fetchActors();
+                else fetchRequests();
+            } else {
+                alert('Failed to update status');
+            }
+        } catch (err) {
+            console.error('Error updating status:', err);
+        }
+    };
+
+    const deleteEntry = async (type, id) => {
+        if (!window.confirm('Are you sure you want to delete this entry? This cannot be undone.')) return;
+        const endpoint = type === 'actor' ? '/api/register' : '/api/request';
+        try {
+            const res = await fetch(endpoint, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id })
+            });
+            if (res.ok) {
+                if (type === 'actor') fetchActors();
+                else fetchRequests();
+            } else {
+                alert('Failed to delete entry.');
+            }
+        } catch (err) {
+            console.error('Error deleting entry:', err);
         }
     };
 
@@ -130,16 +235,9 @@ const AdminDashboard = () => {
         }
     };
 
-    const actorData = [
-        { id: 1, name: "Arjun Reddy", email: "arjun@example.com", phone: "+91 98765 43210", status: "Active" },
-        { id: 2, name: "Sneha Kapoor", email: "sneha@example.com", phone: "+91 88765 43211", status: "Pending" },
-        { id: 3, name: "Rohan Mehra", email: "rohan@example.com", phone: "+91 78765 43212", status: "Active" },
-    ];
+    // Dynamic actorData is fetched from DB
 
-    const requestData = [
-        { id: 101, client: "Red Chillies", type: "Web Series", budget: "₹5 Lakhs", date: "2024-03-10" },
-        { id: 102, client: "Dharma Prod", type: "Movie", budget: "₹15 Lakhs", date: "2024-03-12" },
-    ];
+    // Dynamic requestData is fetched from DB
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -213,6 +311,12 @@ const AdminDashboard = () => {
                     <button className={activeTab === 'Dashboard' ? styles.active : ''} onClick={() => setActiveTab('Dashboard')}>
                         <LayoutDashboard size={20} /> Dashboard
                     </button>
+                    <button className={activeTab === 'Actors' ? styles.active : ''} onClick={() => setActiveTab('Actors')}>
+                        <Users size={20} /> Actor Registrations
+                    </button>
+                    <button className={activeTab === 'Requests' ? styles.active : ''} onClick={() => setActiveTab('Requests')}>
+                        <FileText size={20} /> Client Requests
+                    </button>
                     <button className={activeTab === 'SiteContent' ? styles.active : ''} onClick={() => setActiveTab('SiteContent')}>
                         <Settings size={20} /> Site Content
                     </button>
@@ -242,20 +346,96 @@ const AdminDashboard = () => {
                                         <th>Actor Name</th>
                                         <th>Email</th>
                                         <th>Phone</th>
+                                        <th>Photos</th>
+                                        <th>Payment</th>
                                         <th>Status</th>
-                                        <th>Actions</th>
+                                        <th>Delete</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {actorData.map(actor => (
-                                        <tr key={actor.id}>
-                                            <td>{actor.name}</td>
-                                            <td>{actor.email}</td>
-                                            <td>{actor.phone}</td>
-                                            <td><span className={styles.statusBadge + " " + (actor.status === 'Active' ? styles.activeBadge : styles.pendingBadge)}>{actor.status}</span></td>
-                                            <td><button className={styles.iconBtn}><MoreVertical size={16} /></button></td>
-                                        </tr>
-                                    ))}
+                                    {actorData.map(actor => {
+                                        const isOpen = expandedRow === actor.id;
+                                        return (
+                                            <React.Fragment key={actor.id}>
+                                                <tr className={styles.expandRow} onClick={() => setExpandedRow(isOpen ? null : actor.id)}>
+                                                    <td><strong>{actor.name}</strong></td>
+                                                    <td>{actor.email}</td>
+                                                    <td>{actor.phone}</td>
+                                                    <td>
+                                                        <div style={{ display: 'flex', gap: '8px', fontSize: '13px' }}>
+                                                            {actor.fullPhoto && <a href={actor.fullPhoto} target="_blank" onClick={e => e.stopPropagation()} style={{ color: 'var(--primary)', textDecoration: 'underline' }}>Full</a>}
+                                                            {actor.halfPhoto && <a href={actor.halfPhoto} target="_blank" onClick={e => e.stopPropagation()} style={{ color: 'var(--primary)', textDecoration: 'underline' }}>Half</a>}
+                                                            {actor.passportPhoto && <a href={actor.passportPhoto} target="_blank" onClick={e => e.stopPropagation()} style={{ color: 'var(--primary)', textDecoration: 'underline' }}>Pass</a>}
+                                                        </div>
+                                                    </td>
+                                                    <td>{actor.payment && <a href={actor.payment} target="_blank" onClick={e => e.stopPropagation()} style={{ color: 'var(--primary)', textDecoration: 'underline' }}>View</a>}</td>
+                                                    <td onClick={e => e.stopPropagation()}>
+                                                        <select value={actor.status} onChange={(e) => handleStatusChange(e, 'actor', actor.id)} className={styles.statusBadge + ' ' + (actor.status === 'Active' ? styles.activeBadge : styles.pendingBadge)} style={{ cursor: 'pointer', border: 'none', appearance: 'none', outline: 'none' }}>
+                                                            <option value="Pending" style={{ color: '#000' }}>Pending</option>
+                                                            <option value="Active" style={{ color: '#000' }}>Completed</option>
+                                                        </select>
+                                                    </td>
+                                                    <td onClick={e => e.stopPropagation()}>
+                                                        <button onClick={() => deleteEntry('actor', actor.id)} style={{ background: '#EF4444', color: 'white', padding: '5px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: '700', cursor: 'pointer', border: 'none' }}>Delete</button>
+                                                    </td>
+                                                </tr>
+                                                {isOpen && (
+                                                    <tr className={styles.detailRow}>
+                                                        <td colSpan={7}>
+                                                            <div className={styles.detailPanel}>
+                                                                <div className={styles.detailSection}>
+                                                                    <h4>Personal & Professional Details</h4>
+                                                                    <div className={styles.detailGrid}>
+                                                                        <div className={styles.detailItem}><span className={styles.detailLabel}>Full Name</span><span className={styles.detailValue}>{actor.name || '-'}</span></div>
+                                                                        <div className={styles.detailItem}><span className={styles.detailLabel}>Phone</span><span className={styles.detailValue}>{actor.phone || '-'}</span></div>
+                                                                        <div className={styles.detailItem}><span className={styles.detailLabel}>Email</span><span className={styles.detailValue}>{actor.email || '-'}</span></div>
+                                                                        <div className={styles.detailItem}><span className={styles.detailLabel}>Age</span><span className={styles.detailValue}>{actor.age || '-'}</span></div>
+                                                                        <div className={styles.detailItem}><span className={styles.detailLabel}>Gender</span><span className={styles.detailValue}>{actor.gender || '-'}</span></div>
+                                                                        <div className={styles.detailItem}><span className={styles.detailLabel}>Location</span><span className={styles.detailValue}>{actor.location || '-'}</span></div>
+                                                                        <div className={styles.detailItem}><span className={styles.detailLabel}>Pincode</span><span className={styles.detailValue}>{actor.pincode || '-'}</span></div>
+                                                                        <div className={styles.detailItem}><span className={styles.detailLabel}>Experience</span><span className={styles.detailValue}>{actor.experience || '-'} yrs</span></div>
+                                                                        <div className={styles.detailItem}><span className={styles.detailLabel}>Languages</span><span className={styles.detailValue}>{actor.languages || '-'}</span></div>
+                                                                        <div className={styles.detailItem}><span className={styles.detailLabel}>Character Type</span><span className={styles.detailValue}>{actor.characterType || '-'}</span></div>
+                                                                        <div className={styles.detailItem}><span className={styles.detailLabel}>Applied On</span><span className={styles.detailValue}>{actor.createdAt}</span></div>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                <div className={styles.detailSection}>
+                                                                    <h4>Uploaded Documents & Photos</h4>
+                                                                    <div className={styles.imageGrid}>
+                                                                        {actor.fullPhoto && (
+                                                                            <div className={styles.imageItem}>
+                                                                                <span className={styles.detailLabel}>Full Photo</span>
+                                                                                <a href={actor.fullPhoto} target="_blank"><img src={actor.fullPhoto} alt="Full" className={styles.detailThumb} /></a>
+                                                                            </div>
+                                                                        )}
+                                                                        {actor.halfPhoto && (
+                                                                            <div className={styles.imageItem}>
+                                                                                <span className={styles.detailLabel}>Half Photo</span>
+                                                                                <a href={actor.halfPhoto} target="_blank"><img src={actor.halfPhoto} alt="Half" className={styles.detailThumb} /></a>
+                                                                            </div>
+                                                                        )}
+                                                                        {actor.passportPhoto && (
+                                                                            <div className={styles.imageItem}>
+                                                                                <span className={styles.detailLabel}>Passport Photo</span>
+                                                                                <a href={actor.passportPhoto} target="_blank"><img src={actor.passportPhoto} alt="Passport" className={styles.detailThumb} /></a>
+                                                                            </div>
+                                                                        )}
+                                                                        {actor.payment && (
+                                                                            <div className={styles.imageItem}>
+                                                                                <span className={styles.detailLabel}>Payment Screenshot</span>
+                                                                                <a href={actor.payment} target="_blank"><img src={actor.payment} alt="Payment" className={styles.detailThumb} /></a>
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                )}
+                                            </React.Fragment>
+                                        );
+                                    })}
                                 </tbody>
                             </table>
                         </div>
@@ -268,18 +448,63 @@ const AdminDashboard = () => {
                                         <th>Project Type</th>
                                         <th>Budget</th>
                                         <th>Date</th>
-                                        <th>Actions</th>
+                                        <th>Status</th>
+                                        <th>Delete</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {requestData.map(req => (
-                                        <tr key={req.id}>
-                                            <td>{req.client}</td>
-                                            <td>{req.type}</td>
-                                            <td>{req.budget}</td>
-                                            <td>{req.date}</td>
-                                            <td><button className={styles.iconBtn}><MoreVertical size={16} /></button></td>
-                                        </tr>
+                                        <React.Fragment key={req.id}>
+                                            <tr className={styles.expandRow} onClick={() => setExpandedRow(expandedRow === req.id ? null : req.id)}>
+                                                <td><strong>{req.client}</strong></td>
+                                                <td>{req.type}</td>
+                                                <td>{req.budget}</td>
+                                                <td>{req.date}</td>
+                                                <td onClick={e => e.stopPropagation()}>
+                                                    <select
+                                                        value={req.status}
+                                                        onChange={(e) => handleStatusChange(e, 'request', req.id)}
+                                                        className={styles.statusBadge + " " + (req.status === 'Active' ? styles.activeBadge : styles.pendingBadge)}
+                                                        style={{ cursor: 'pointer', border: 'none', appearance: 'none', outline: 'none' }}
+                                                    >
+                                                        <option value="Pending" style={{ color: '#000' }}>Pending</option>
+                                                        <option value="Active" style={{ color: '#000' }}>Completed</option>
+                                                    </select>
+                                                </td>
+                                                <td onClick={e => e.stopPropagation()}>
+                                                    <button onClick={() => deleteEntry('request', req.id)} style={{ background: '#EF4444', color: 'white', padding: '5px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: '700', cursor: 'pointer', border: 'none' }}>Delete</button>
+                                                </td>
+                                            </tr>
+                                            {expandedRow === req.id && (
+                                                <tr className={styles.detailRow}>
+                                                    <td colSpan={6}>
+                                                        <div className={styles.detailPanel}>
+                                                            <div className={styles.detailSection}>
+                                                                <h4>Request Details</h4>
+                                                                <div className={styles.detailGrid}>
+                                                                    <div className={styles.detailItem}><span className={styles.detailLabel}>Client / Company</span><span className={styles.detailValue}>{req.client || '-'}</span></div>
+                                                                    <div className={styles.detailItem}><span className={styles.detailLabel}>Project Type</span><span className={styles.detailValue}>{req.type || '-'}</span></div>
+                                                                    <div className={styles.detailItem}><span className={styles.detailLabel}>Phone</span><span className={styles.detailValue}>{req.phone || '-'}</span></div>
+                                                                    <div className={styles.detailItem}><span className={styles.detailLabel}>Email</span><span className={styles.detailValue}>{req.email || '-'}</span></div>
+                                                                    <div className={styles.detailItem}><span className={styles.detailLabel}>Actor Count</span><span className={styles.detailValue}>{req.actorCount || '-'}</span></div>
+                                                                    <div className={styles.detailItem}><span className={styles.detailLabel}>Age Range</span><span className={styles.detailValue}>{req.ageRange || '-'}</span></div>
+                                                                    <div className={styles.detailItem}><span className={styles.detailLabel}>Gender</span><span className={styles.detailValue}>{req.gender || '-'}</span></div>
+                                                                    <div className={styles.detailItem}><span className={styles.detailLabel}>Location</span><span className={styles.detailValue}>{req.location || '-'}</span></div>
+                                                                    <div className={styles.detailItem}><span className={styles.detailLabel}>Budget</span><span className={styles.detailValue}>{req.budget || '-'}</span></div>
+                                                                    <div className={styles.detailItem}><span className={styles.detailLabel}>Submission Date</span><span className={styles.detailValue}>{req.date}</span></div>
+                                                                </div>
+                                                            </div>
+                                                            <div className={styles.detailSection}>
+                                                                <h4>Project Description</h4>
+                                                                <div className={styles.detailValue} style={{ whiteSpace: 'pre-wrap', padding: '10px', background: '#f1f5f9', borderRadius: '8px', marginTop: '10px' }}>
+                                                                    {req.description || 'No description provided.'}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </React.Fragment>
                                     ))}
                                 </tbody>
                             </table>
@@ -471,15 +696,15 @@ const AdminDashboard = () => {
                         <div className={styles.statsGrid}>
                             <div className={styles.statCard}>
                                 <h4>Total Actors</h4>
-                                <span>5,234</span>
+                                <span>{actorData.length}</span>
                             </div>
                             <div className={styles.statCard}>
                                 <h4>Pending Requests</h4>
-                                <span>12</span>
+                                <span>{requestData.length}</span>
                             </div>
-                            <div className={styles.statCard}>
-                                <h4>Active Projects</h4>
-                                <span>45</span>
+                            <div className={styles.statCard} onClick={() => setActiveTab('Actors')} style={{ cursor: 'pointer', background: '#2a2a2a', border: '1px solid #444' }}>
+                                <h4>View All Actors</h4>
+                                <span style={{ fontSize: '16px', color: '#FFD700', marginTop: '10px', display: 'flex', alignItems: 'center', gap: '5px' }}>Manage <span style={{ fontSize: '20px' }}>→</span></span>
                             </div>
                         </div>
                     )}

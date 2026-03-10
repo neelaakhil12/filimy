@@ -54,23 +54,41 @@ const Navbar = () => {
 
                 {/* Mobile Menu */}
                 <div className={`${styles.mobileMenu} ${isMobileMenuOpen ? styles.open : ''}`}>
-                    {navLinks.map((link) => (
-                        <Link
-                            key={link.name}
-                            href={link.href}
-                            className={styles.mobileLink}
+                    <div className={styles.mobileHeader}>
+                        <Link href="/" className={styles.mobileLogo} onClick={() => setIsMobileMenuOpen(false)}>
+                            <Film className={styles.mobileIcon} />
+                            <span>Movie<span style={{ color: 'var(--primary)' }}>lifez</span></span>
+                        </Link>
+                        <button
+                            className={styles.closeToggle}
                             onClick={() => setIsMobileMenuOpen(false)}
                         >
-                            {link.name}
+                            <X size={28} />
+                        </button>
+                    </div>
+
+                    <div className={styles.mobileLinksWrapper}>
+                        {navLinks.map((link) => (
+                            <Link
+                                key={link.name}
+                                href={link.href}
+                                className={styles.mobileLink}
+                                onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                                {link.name}
+                            </Link>
+                        ))}
+                    </div>
+
+                    <div className={styles.mobileActions}>
+                        <Link
+                            href="/register"
+                            className={styles.mobileCtaPrimary}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                            Enroll Now
                         </Link>
-                    ))}
-                    <Link
-                        href="/register"
-                        className={styles.mobileCta}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                        Enroll Now
-                    </Link>
+                    </div>
                 </div>
             </div>
         </nav>
