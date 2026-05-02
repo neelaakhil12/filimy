@@ -8,7 +8,6 @@ import { sendToWhatsApp } from '@/lib/whatsapp';
 
 const RegistrationPage = () => {
     const [step, setStep] = useState(1);
-    const [showPayment, setShowPayment] = useState(false);
     const [config, setConfig] = useState(null);
     const [uploadingFiles, setUploadingFiles] = useState({});
 
@@ -121,18 +120,10 @@ const RegistrationPage = () => {
             alert("Please select a character plan first.");
             return;
         }
-        if (step === 3 && !formData.paymentScreenshot && !showPayment) {
-            setShowPayment(true);
-            return;
-        }
         setStep(step + 1);
     };
 
     const handleBack = () => {
-        if (step === 3 && showPayment) {
-            setShowPayment(false);
-            return;
-        }
         setStep(step - 1);
     };
 
@@ -153,15 +144,13 @@ const RegistrationPage = () => {
         }
 
         sendToWhatsApp(formData, "Actor Registration");
-        setStep(6); // Success step
+        setStep(4); // Success step
     };
 
     const steps = [
         { title: "Personal", icon: <User /> },
         { title: "Experience", icon: <Briefcase /> },
         { title: "Character", icon: <Star /> },
-        { title: "Contact", icon: <Phone /> },
-        { title: "Review", icon: <CheckCircle /> },
     ];
 
     const selectedPlan = characterPlans.find(p => p.id === formData.characterType);
@@ -217,6 +206,14 @@ const RegistrationPage = () => {
                                         <div className={styles.inputGroup}>
                                             <label>Pincode</label>
                                             <input type="text" name="pincode" value={formData.pincode} onChange={handleInputChange} required placeholder="6-digit ZIP code" />
+                                        </div>
+                                        <div className={styles.inputGroup}>
+                                            <label>Phone Number</label>
+                                            <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} required />
+                                        </div>
+                                        <div className={styles.inputGroup}>
+                                            <label>Email Address</label>
+                                            <input type="email" name="email" value={formData.email} onChange={handleInputChange} required />
                                         </div>
                                     </div>
                                     <button type="button" onClick={handleNext} className={styles.nextBtn}>
@@ -277,124 +274,47 @@ const RegistrationPage = () => {
 
                             {step === 3 && (
                                 <div className={styles.stepContent}>
-                                    {!showPayment ? (
-                                        <>
-                                            <h3>Choose Character Life</h3>
-                                            <div className={styles.cardGrid}>
-                                                {characterPlans.map((plan) => (
-                                                    <div
-                                                        key={plan.id}
-                                                        className={`${styles.planCard} ${formData.characterType === plan.id ? styles.selectedPlan : ''}`}
-                                                        onClick={() => handleInputChange({ target: { name: 'characterType', value: plan.id } })}
-                                                    >
-                                                        {formData.characterType === plan.id && (
-                                                            <div className={styles.selectionIndicator}>
-                                                                <Check size={16} />
-                                                            </div>
-                                                        )}
-                                                        <div className={styles.planIcon} style={{ backgroundColor: plan.color }}>
-                                                            {plan.icon}
-                                                        </div>
-                                                        <h4>{plan.title}</h4>
-                                                        <div className={styles.planPrice}>{plan.price}</div>
-                                                        <ul className={styles.planFeatures}>
-                                                            <li>{plan.contract}</li>
-                                                            <li>{plan.prize}</li>
-                                                            <li>{plan.ads}</li>
-                                                        </ul>
+                                    <h3>Choose Character Life</h3>
+                                    <div className={styles.cardGrid}>
+                                        {characterPlans.map((plan) => (
+                                            <div
+                                                key={plan.id}
+                                                className={`${styles.planCard} ${formData.characterType === plan.id ? styles.selectedPlan : ''}`}
+                                                onClick={() => handleInputChange({ target: { name: 'characterType', value: plan.id } })}
+                                            >
+                                                {formData.characterType === plan.id && (
+                                                    <div className={styles.selectionIndicator}>
+                                                        <Check size={16} />
                                                     </div>
-                                                ))}
-                                            </div>
-                                            <p className={styles.refundNote}>
-                                                📌 <strong>Note:</strong> The Amount collected is non-refundable as it is considered as a crowdfund contribution.
-                                            </p>
-                                            <div className={styles.actionBtns}>
-                                                <button type="button" onClick={handleBack} className={styles.backBtn}><ChevronLeft size={18} /> Back</button>
-                                                <button type="button" onClick={handleNext} className={styles.nextBtn}>Pay Now <CreditCard size={18} /></button>
-                                            </div>
-                                        </>
-                                    ) : (
-                                        <div className={styles.paymentSection}>
-                                            <h3>Complete Your Payment</h3>
-                                            <div className={styles.paymentGrid}>
-                                                <div className={styles.qrContainer}>
-                                                    <img src={config?.enrollmentPrices?.paymentQR || "/images/payment-qr.png"} alt="Payment QR Code" className={styles.qrCode} />
-                                                    <p>Scan the QR code to pay <strong>{selectedPlan.price}</strong></p>
+                                                )}
+                                                <div className={styles.planIcon} style={{ backgroundColor: plan.color }}>
+                                                    {plan.icon}
                                                 </div>
-                                                <div className={styles.paymentInfo}>
-                                                    <div className={styles.planSummary}>
-                                                        <span>Selected Plan:</span>
-                                                        <strong>{selectedPlan.title}</strong>
-                                                    </div>
-                                                    <div className={styles.inputGroup + " " + styles.fullWidth}>
-                                                        <label>Upload Payment Screenshot</label>
-                                                        <div className={styles.fileUpload}>
-                                                            <input type="file" name="paymentScreenshot" onChange={handleFileChange} accept=".pdf,.doc,.docx,image/*" id="paymentScreenshot" required />
-                                                            <label htmlFor="paymentScreenshot" className={styles.fileLabel}>
-                                                                <Scan size={20} />
-                                                                {uploadingFiles.paymentScreenshot ? "Uploading..." : formData.paymentScreenshot ? "Screenshot Uploaded" : "Select Screenshot"}
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                    <p className={styles.paymentNote}>*Please upload the screenshot after successful payment to proceed.</p>
-                                                </div>
+                                                <h4>{plan.title}</h4>
+                                                <div className={styles.planPrice}>{plan.price}</div>
+                                                <ul className={styles.planFeatures}>
+                                                    <li>{plan.contract}</li>
+                                                    <li>{plan.prize}</li>
+                                                    <li>{plan.ads}</li>
+                                                </ul>
                                             </div>
-                                            <div className={styles.actionBtns}>
-                                                <button type="button" onClick={handleBack} className={styles.backBtn}><ChevronLeft size={18} /> Back</button>
-                                                <button type="button" onClick={handleNext} disabled={!formData.paymentScreenshot} className={styles.nextBtn}>Verify & Continue <ChevronRight size={18} /></button>
-                                            </div>
-                                        </div>
-                                    )}
+                                        ))}
+                                    </div>
+                                    <p className={styles.refundNote}>
+                                        📌 <strong>Note:</strong> The Amount collected is non-refundable as it is considered as a crowdfund contribution.
+                                    </p>
+                                    <div className={styles.actionBtns}>
+                                        <button type="button" onClick={handleBack} className={styles.backBtn}><ChevronLeft size={18} /> Back</button>
+                                        <button type="submit" className={styles.submitBtn}>Submit Application <Check size={18} /></button>
+                                    </div>
                                 </div>
                             )}
 
                             {step === 4 && (
-                                <div className={styles.stepContent}>
-                                    <h3>Contact Channels</h3>
-                                    <div className={styles.fieldGrid}>
-                                        <div className={styles.inputGroup}>
-                                            <label>Phone Number</label>
-                                            <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} required />
-                                        </div>
-                                        <div className={styles.inputGroup}>
-                                            <label>Email Address</label>
-                                            <input type="email" name="email" value={formData.email} onChange={handleInputChange} required />
-                                        </div>
-                                    </div>
-                                    <div className={styles.actionBtns}>
-                                        <button type="button" onClick={handleBack} className={styles.backBtn}><ChevronLeft size={18} /> Back</button>
-                                        <button type="button" onClick={handleNext} className={styles.nextBtn}>Review <ChevronRight size={18} /></button>
-                                    </div>
-                                </div>
-                            )}
-
-                            {step === 5 && (
-                                <div className={styles.stepContent}>
-                                    <h3>Review Your Application</h3>
-                                    <div className={styles.reviewGrid}>
-                                        <div className={styles.reviewItem}><span>Name:</span> {formData.fullName}</div>
-                                        <div className={styles.reviewItem}><span>Age/Gender:</span> {formData.age} / {formData.gender}</div>
-                                        <div className={styles.reviewItem}><span>Location:</span> {formData.location} ({formData.pincode})</div>
-                                        <div className={styles.reviewItem}><span>Experience:</span> {formData.experience}</div>
-                                        <div className={styles.reviewItem}><span>Plan:</span> {selectedPlan?.title} ({selectedPlan?.price})</div>
-                                        <div className={styles.reviewItem}><span>Phone:</span> {formData.phone}</div>
-                                        <div className={styles.reviewItem}><span>Photos:</span> Uploaded</div>
-                                        <div className={styles.reviewItem}><span>Payment:</span> {formData.paymentScreenshot ? "Screenshot Uploaded" : "Not Provided"}</div>
-                                    </div>
-                                    <div className={styles.actionBtns}>
-                                        <button type="button" onClick={handleBack} className={styles.backBtn}><ChevronLeft size={18} /> Back</button>
-                                        <button type="submit" className={styles.submitBtn}>
-                                            Send to WhatsApp
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
-
-                            {step === 6 && (
                                 <div className={styles.successStep}>
                                     <CheckCircle size={60} className={styles.successIcon} />
                                     <h3>Application Submitted!</h3>
-                                    <p>Your details and payment screenshot have been sent. Our team will verify and contact you soon.</p>
+                                    <p>Your details have been sent. Our team will contact you soon.</p>
                                     <button type="button" onClick={() => (window.location.href = "/")} className={styles.nextBtn}>
                                         Back to Home
                                     </button>
